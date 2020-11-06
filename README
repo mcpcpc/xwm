@@ -1,0 +1,66 @@
+xwm - a tiny XCB floating window manager
+
+FEATURES
+========
+
+*   Few features (just works)
+*   Extensible & configurable
+*   Focus follows mouse
+
+BUILD REQUIREMENTS
+==================
+
+Other than libxcb, xwm also uses several default utilities which can be
+patched or configured to the users preference.
+
+    application launcher   dmenu - https://git.suckless.org/dmenu
+    terminal emulator      st - https://git.suckless.org/st
+    internet browser       surf - https://git.suckless.org/surf
+
+COMMANDS
+========
+
+Implemented commands are limited.
+    Win+Button1+[drag]    interactive window move
+    Win+Button3+[drag]    interactive window resize
+    Win+Space             run launcher menu (default: dmenu_run)
+    Win+Enter             create new terminal window (default: st)
+    Win+Shift+q           quit window manager
+
+INSTALL
+=======
+
+Building and installing from source:
+    git clone https://github.com/mcpcpc/xwm
+    cd xwm
+    make
+    sudo make install
+
+Building and installing on KISS Linux:
+    kiss b xwm
+    kiss i xwm
+
+EXAMPLES
+========
+
+Check your xwm installed version:
+    xwm -v
+
+Usimg startx to run xwm:
+    echo "exec xwm" > ~/.xinitrc
+    startx
+
+Using xsetroot to set a solid background color:
+    xsetroot -solid red
+
+Using imagemagick and a shell script to set a wallpaper:
+    curl -L -o bud https://bit.ly/38aAmDt
+    chmod +x bud
+    install bud /usr/bin/
+    bud ~/path/to/wallpaper/directory/
+
+CONTACT
+=======
+
+For questions or issues, please contact info[at]mcpcpc[dot]com.
+

@@ -1,0 +1,33 @@
+.\" Manpage for xwm.
+.TH XWM 1 "NOVEMBER 2020" Linux "User Manuals"
+.SH NAME
+xwm \- a tiny XCB floating window managers
+.SH SYNOPSIS
+.B xwm [-v]
+.SH DESCRIPTION
+.B xwm
+is a tiny floating window manager implemented using 
+the XCB protocol. Other than 
+.BR libxcb (1),
+xwm also specifies third-party utilitiies for command 
+alias, including the 
+.BR surf (1)
+web browser,
+.BR st (1)
+terminal emulator and
+.BR dmenu (1)
+application launcher. Defaults for these command 
+aliases can be configured or patched to the user's
+preference.
+.SH OPTIONS
+.IP -v
+Prints the current xwm version.
+.SH BUGS
+No known bugs.
+.SH AUTHOR
+Michael Czigler <info[at]mcpcpc[dot]com>
+.SH "SEE ALSO"
+.BR livxcb (1),
+.BR st (1),
+.BR surf (1),
+.BR dmenu (1)
