@@ -33,7 +33,7 @@ static void spawn(char **com) {
 }
 
 static void eventHandlerButtonPress(xcb_generic_event_t * ev) {
-    xcb_button_press_event_t  * e = ( xcb_button_press_event_t *) ev;
+    xcb_button_press_event_t  * e = (xcb_button_press_event_t *) ev;
     win = e->child;
     values[0] = XCB_STACK_MODE_ABOVE;
     xcb_configure_window(dpy, win, XCB_CONFIG_WINDOW_STACK_MODE, values);
@@ -42,7 +42,7 @@ static void eventHandlerButtonPress(xcb_generic_event_t * ev) {
     if (1 == e->detail) {
         values[2] = 1;
         xcb_warp_pointer(dpy, XCB_NONE, win, 0, 0, 0, 0, 1, 1);
-    } else {
+    } else if (win != 0) {
         values[2] = 3;
         xcb_warp_pointer(dpy, XCB_NONE, win, 0, 0, 0, 0, geom->width, geom->height);
     }
@@ -55,7 +55,7 @@ static void eventHandlerMotionNotify(xcb_generic_event_t * ev) {
     xcb_query_pointer_cookie_t coord = xcb_query_pointer(dpy, root);
     xcb_query_pointer_reply_t * poin = xcb_query_pointer_reply(dpy, coord, 0);
     uint32_t val[2] = {1, 3};
-    if (values[2] == val[0]) {
+    if ((values[2] == val[0]) && (win != 0)) {
         xcb_get_geometry_cookie_t geom_now = xcb_get_geometry(dpy, win);
         xcb_get_geometry_reply_t * geom = xcb_get_geometry_reply(dpy, geom_now, NULL);
         values[0] = ((poin->root_x + geom->width) > scre->width_in_pixels) ?
@@ -64,7 +64,8 @@ static void eventHandlerMotionNotify(xcb_generic_event_t * ev) {
             (scre->height_in_pixels - geom->height) : poin->root_y;
         xcb_configure_window(dpy, win, XCB_CONFIG_WINDOW_X
             | XCB_CONFIG_WINDOW_Y, values);
-    } else if (values[2] == val[1]) {
+    }
+    if ((values[2] == val[1]) && (win != 0)) {
         xcb_get_geometry_cookie_t geom_now = xcb_get_geometry(dpy, win);
         xcb_get_geometry_reply_t* geom = xcb_get_geometry_reply(dpy, geom_now, NULL);
         values[0] = poin->root_x - geom->x;
@@ -72,7 +73,6 @@ static void eventHandlerMotionNotify(xcb_generic_event_t * ev) {
         xcb_configure_window(dpy, win, XCB_CONFIG_WINDOW_WIDTH
             | XCB_CONFIG_WINDOW_HEIGHT, values);
     }
-    else {}
 }
 
 static xcb_keycode_t * xcb_get_keycodes(xcb_keysym_t keysym) {
@@ -108,6 +108,16 @@ static void eventHandlerKeyPress(xcb_generic_event_t * ev) {
             keys[i].func(keys[i].com);
         }
     }
+}
+
+static void eventHandlerEnterNotify(xcb_generic_event_t * ev) {
+    xcb_enter_notify_event_t * e = ( xcb_enter_notify_event_t *) ev;
+    xcb_drawable_t win_entered = e->event;
+    if ((win_entered != 0) || (win_entered != root)) {
+        xcb_set_input_focus(dpy, XCB_INPUT_FOCUS_POINTER_ROOT, win_entered,
+            XCB_CURRENT_TIME);
+    }
+
 }
 
 static void eventHandlerButtonRelease(xcb_generic_event_t * ev) {
