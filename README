@@ -11,7 +11,7 @@ BUILD REQUIREMENTS
 ==================
 
 Other than libxcb, xwm also uses several default utilities which can be
-patched or configured to the users preference.
+patched, configured or expanded to meet the users preference.
 
     application launcher   dmenu - https://git.suckless.org/dmenu
     terminal emulator      st - https://git.suckless.org/st
@@ -20,7 +20,7 @@ patched or configured to the users preference.
 COMMANDS
 ========
 
-Implemented commands are limited.
+Implemented commands:
     Win+Button1+[drag]    interactive window move
     Win+Button3+[drag]    interactive window resize
     Win+Space             run launcher menu (default: dmenu_run)
@@ -64,4 +64,3 @@ CONTACT
 =======
 
 For questions or issues, please contact info[at]mcpcpc[dot]com.
-
