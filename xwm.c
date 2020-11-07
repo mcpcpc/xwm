@@ -1,6 +1,5 @@
 /* See LICENSE file for license details. */
 #include <stdarg.h>
-#include <string.h>
 #include <unistd.h>
 #include <xcb/xcb.h>
 #include <xcb/xcb_keysyms.h>
@@ -178,9 +177,18 @@ static int die(char * errstr) {
     return 1;
 }
 
+static int compare(char * str1, char * str2) {
+    while ((* str1) && ((* str1) == (* str2))) {
+        ++str1;
+        ++str2;
+    }
+    int n = (* str1) - (* str2);
+    return n;
+}
+
 int main(int argc, char * argv[]) {
     int ret = 0;
-    if ((argc == 2) && (strcmp("-v", argv[1]) == 0)) {
+    if ((argc == 2) && (compare("-v", argv[1]) == 0)) {
         ret = die("xwm-0.0.3, © 2020 Michael Czigler, see LICENSE for details\n");
     }
     if ((ret == 0) && (argc != 1)) {

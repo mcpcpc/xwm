@@ -44,6 +44,7 @@ static handler_func_t handler_funs[] = {
 static void grabKeys(void);
 static void grabButtons(void);
 
-/* error handling */
+/* error handling & misc. */
 static int die(char * errstr);
+static int compare(char * str1, char * str2);
 
