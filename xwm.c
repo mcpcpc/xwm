@@ -14,6 +14,7 @@ static xcb_drawable_t     root;
 static uint32_t           values[3];
 
 static void killclient(char **com) {
+    xcb_kill_client(dpy, win);
 }
 
 static void closewm(char **com) {
@@ -33,7 +34,7 @@ static void spawn(char **com) {
 }
 
 static void eventHandlerButtonPress(xcb_generic_event_t * ev) {
-    xcb_button_press_event_t  * e = ( xcb_button_press_event_t *) ev;
+    xcb_button_press_event_t  * e = (xcb_button_press_event_t *) ev;
     win = e->child;
     values[0] = XCB_STACK_MODE_ABOVE;
     xcb_configure_window(dpy, win, XCB_CONFIG_WINDOW_STACK_MODE, values);
@@ -42,10 +43,11 @@ static void eventHandlerButtonPress(xcb_generic_event_t * ev) {
     if (1 == e->detail) {
         values[2] = 1;
         xcb_warp_pointer(dpy, XCB_NONE, win, 0, 0, 0, 0, 1, 1);
-    } else {
+    } else if (win != 0) {
         values[2] = 3;
         xcb_warp_pointer(dpy, XCB_NONE, win, 0, 0, 0, 0, geom->width, geom->height);
     }
+    else {}
     xcb_grab_pointer(dpy, 0, root, XCB_EVENT_MASK_BUTTON_RELEASE
         | XCB_EVENT_MASK_BUTTON_MOTION | XCB_EVENT_MASK_POINTER_MOTION_HINT,
         XCB_GRAB_MODE_ASYNC, XCB_GRAB_MODE_ASYNC, root, XCB_NONE, XCB_CURRENT_TIME);
@@ -55,7 +57,7 @@ static void eventHandlerMotionNotify(xcb_generic_event_t * ev) {
     xcb_query_pointer_cookie_t coord = xcb_query_pointer(dpy, root);
     xcb_query_pointer_reply_t * poin = xcb_query_pointer_reply(dpy, coord, 0);
     uint32_t val[2] = {1, 3};
-    if (values[2] == val[0]) {
+    if ((values[2] == val[0]) && (win != 0)) {
         xcb_get_geometry_cookie_t geom_now = xcb_get_geometry(dpy, win);
         xcb_get_geometry_reply_t * geom = xcb_get_geometry_reply(dpy, geom_now, NULL);
         values[0] = ((poin->root_x + geom->width) > scre->width_in_pixels) ?
@@ -64,7 +66,8 @@ static void eventHandlerMotionNotify(xcb_generic_event_t * ev) {
             (scre->height_in_pixels - geom->height) : poin->root_y;
         xcb_configure_window(dpy, win, XCB_CONFIG_WINDOW_X
             | XCB_CONFIG_WINDOW_Y, values);
-    } else if (values[2] == val[1]) {
+    }
+    if ((values[2] == val[1]) && (win != 0)) {
         xcb_get_geometry_cookie_t geom_now = xcb_get_geometry(dpy, win);
         xcb_get_geometry_reply_t* geom = xcb_get_geometry_reply(dpy, geom_now, NULL);
         values[0] = poin->root_x - geom->x;
@@ -72,7 +75,6 @@ static void eventHandlerMotionNotify(xcb_generic_event_t * ev) {
         xcb_configure_window(dpy, win, XCB_CONFIG_WINDOW_WIDTH
             | XCB_CONFIG_WINDOW_HEIGHT, values);
     }
-    else {}
 }
 
 static xcb_keycode_t * xcb_get_keycodes(xcb_keysym_t keysym) {
@@ -102,11 +104,21 @@ static xcb_keysym_t xcb_get_keysym(xcb_keycode_t keycode) {
 static void eventHandlerKeyPress(xcb_generic_event_t * ev) {
     xcb_key_press_event_t * e = ( xcb_key_press_event_t *) ev;
     xcb_keysym_t keysym = xcb_get_keysym(e->detail);
+    win = e->child;
     int key_table_size = sizeof(keys) / sizeof(*keys);
     for (int i = 0; i < key_table_size; ++i) {
         if ((keys[i].keysym == keysym) && (keys[i].mod == e->state)) {
             keys[i].func(keys[i].com);
         }
+    }
+}
+
+static void eventHandlerEnterNotify(xcb_generic_event_t * ev) {
+    xcb_enter_notify_event_t * e = ( xcb_enter_notify_event_t *) ev;
+    xcb_drawable_t win_e = e->event;
+    if ((win_e != 0) && (win_e != root)) {
+        xcb_set_input_focus(dpy, XCB_INPUT_FOCUS_POINTER_ROOT, win_e,
+            XCB_CURRENT_TIME);
     }
 }
 
@@ -169,7 +181,7 @@ static int die(char * errstr) {
 int main(int argc, char * argv[]) {
     int ret = 0;
     if ((argc == 2) && (strcmp("-v", argv[1]) == 0)) {
-        ret = die("xwm-0.0.1, © 2020 Michael Czigler, see LICENSE for details\n");
+        ret = die("xwm-0.0.2, © 2020 Michael Czigler, see LICENSE for details\n");
     }
     if ((ret == 0) && (argc != 1)) {
         ret = die("usage: xwm [-v]\n");

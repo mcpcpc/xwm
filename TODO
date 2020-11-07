@@ -1,3 +1,2 @@
-*   Fix minimum window size
-*   Add close window command (e.g. Win+q)
+*   Add minimum window size
 *   Use library call instead of execvp()
