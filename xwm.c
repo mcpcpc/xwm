@@ -112,12 +112,11 @@ static void eventHandlerKeyPress(xcb_generic_event_t * ev) {
 
 static void eventHandlerEnterNotify(xcb_generic_event_t * ev) {
     xcb_enter_notify_event_t * e = ( xcb_enter_notify_event_t *) ev;
-    xcb_drawable_t win_entered = e->event;
-    if ((win_entered != 0) || (win_entered != root)) {
-        xcb_set_input_focus(dpy, XCB_INPUT_FOCUS_POINTER_ROOT, win_entered,
+    xcb_drawable_t win_e = e->event;
+    if ((win_e != 0) && (win_e != root)) {
+        xcb_set_input_focus(dpy, XCB_INPUT_FOCUS_POINTER_ROOT, win_e,
             XCB_CURRENT_TIME);
     }
-
 }
 
 static void eventHandlerButtonRelease(xcb_generic_event_t * ev) {
