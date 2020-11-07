@@ -178,11 +178,13 @@ static int die(char * errstr) {
 }
 
 static int compare(char * str1, char * str2) {
-    while ((* str1) && ((* str1) == (* str2))) {
-        ++str1;
-        ++str2;
+    char * c1 = str1;
+	char * c2 = str2;
+    while ((* c1) && ((* c1) == (* c2))) {
+        ++c1;
+        ++c2;
     }
-    int n = (* str1) - (* str2);
+    int n = (* c1) - (* c2);
     return n;
 }
 
