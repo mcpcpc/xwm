@@ -181,7 +181,7 @@ static int die(char * errstr) {
 int main(int argc, char * argv[]) {
     int ret = 0;
     if ((argc == 2) && (strcmp("-v", argv[1]) == 0)) {
-        ret = die("xwm-0.0.2, © 2020 Michael Czigler, see LICENSE for details\n");
+        ret = die("xwm-0.0.3, © 2020 Michael Czigler, see LICENSE for details\n");
     }
     if ((ret == 0) && (argc != 1)) {
         ret = die("usage: xwm [-v]\n");
