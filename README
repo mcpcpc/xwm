@@ -25,6 +25,7 @@ Implemented commands are limited.
     Win+Button3+[drag]    interactive window resize
     Win+Space             run launcher menu (default: dmenu_run)
     Win+Enter             create new terminal window (default: st)
+    Win+q                 kill focused window
     Win+Shift+q           quit window manager
 
 INSTALL

@@ -14,6 +14,7 @@ static xcb_drawable_t     root;
 static uint32_t           values[3];
 
 static void killclient(char **com) {
+    xcb_kill_client(dpy, win);
 }
 
 static void closewm(char **com) {
@@ -102,6 +103,7 @@ static xcb_keysym_t xcb_get_keysym(xcb_keycode_t keycode) {
 static void eventHandlerKeyPress(xcb_generic_event_t * ev) {
     xcb_key_press_event_t * e = ( xcb_key_press_event_t *) ev;
     xcb_keysym_t keysym = xcb_get_keysym(e->detail);
+    win = e->child;
     int key_table_size = sizeof(keys) / sizeof(*keys);
     for (int i = 0; i < key_table_size; ++i) {
         if ((keys[i].keysym == keysym) && (keys[i].mod == e->state)) {
