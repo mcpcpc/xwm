@@ -32,7 +32,7 @@ static void spawn(char **com) {
     }
 }
 
-static void eventHandlerButtonPress(xcb_generic_event_t * ev) {
+static void handleButtonPress(xcb_generic_event_t * ev) {
     xcb_button_press_event_t  * e = (xcb_button_press_event_t *) ev;
     win = e->child;
     values[0] = XCB_STACK_MODE_ABOVE;
@@ -52,7 +52,7 @@ static void eventHandlerButtonPress(xcb_generic_event_t * ev) {
         XCB_GRAB_MODE_ASYNC, XCB_GRAB_MODE_ASYNC, root, XCB_NONE, XCB_CURRENT_TIME);
 }
 
-static void eventHandlerMotionNotify(xcb_generic_event_t * ev) {
+static void handleMotionNotify(xcb_generic_event_t * ev) {
     xcb_query_pointer_cookie_t coord = xcb_query_pointer(dpy, root);
     xcb_query_pointer_reply_t * poin = xcb_query_pointer_reply(dpy, coord, 0);
     uint32_t val[2] = {1, 3};
@@ -92,7 +92,7 @@ static xcb_keysym_t xcb_get_keysym(xcb_keycode_t keycode) {
     return keysym;
 }
 
-static void eventHandlerKeyPress(xcb_generic_event_t * ev) {
+static void handleKeyPress(xcb_generic_event_t * ev) {
     xcb_key_press_event_t * e = ( xcb_key_press_event_t *) ev;
     xcb_keysym_t keysym = xcb_get_keysym(e->detail);
     win = e->child;
@@ -104,7 +104,7 @@ static void eventHandlerKeyPress(xcb_generic_event_t * ev) {
     }
 }
 
-static void eventHandlerEnterNotify(xcb_generic_event_t * ev) {
+static void handleEnterNotify(xcb_generic_event_t * ev) {
     xcb_enter_notify_event_t * e = ( xcb_enter_notify_event_t *) ev;
     xcb_drawable_t win_e = e->event;
     if ((win_e != 0) && (win_e != root)) {
@@ -113,11 +113,11 @@ static void eventHandlerEnterNotify(xcb_generic_event_t * ev) {
     }
 }
 
-static void eventHandlerButtonRelease(xcb_generic_event_t * ev) {
+static void handleButtonRelease(xcb_generic_event_t * ev) {
     xcb_ungrab_pointer(dpy, XCB_CURRENT_TIME);
 }
 
-static void eventHandlerDestroyNotify(xcb_generic_event_t * ev) {
+static void handleDestroyNotify(xcb_generic_event_t * ev) {
     xcb_destroy_notify_event_t * e = (xcb_destroy_notify_event_t *) ev;
     xcb_kill_client(dpy, e->window);
 }

@@ -24,19 +24,19 @@ static void closewm(char ** com);
 
 /* event hander actions */
 static int eventHandler(void);
-static void eventHandlerMotionNotify(xcb_generic_event_t * ev);
-static void eventHandlerEnterNotify(xcb_generic_event_t * ev);
-static void eventHandlerButtonPress(xcb_generic_event_t * ev);
-static void eventHandlerButtonRelease(xcb_generic_event_t * ev);
-static void eventHandlerKeyPress(xcb_generic_event_t * ev);
-static void eventHandlerDestroyNotify(xcb_generic_event_t * ev);
+static void handleMotionNotify(xcb_generic_event_t * ev);
+static void handleEnterNotify(xcb_generic_event_t * ev);
+static void handleButtonPress(xcb_generic_event_t * ev);
+static void handleButtonRelease(xcb_generic_event_t * ev);
+static void handleKeyPress(xcb_generic_event_t * ev);
+static void handleDestroyNotify(xcb_generic_event_t * ev);
 static handler_func_t handler_funs[] = {
-    { XCB_MOTION_NOTIFY,  eventHandlerMotionNotify },
-    { XCB_ENTER_NOTIFY,   eventHandlerEnterNotify },
-    { XCB_BUTTON_PRESS,   eventHandlerButtonPress },
-    { XCB_BUTTON_RELEASE, eventHandlerButtonRelease },
-    { XCB_KEY_PRESS,      eventHandlerKeyPress },
-    { XCB_DESTROY_NOTIFY, eventHandlerDestroyNotify },
+    { XCB_MOTION_NOTIFY,  handleMotionNotify },
+    { XCB_ENTER_NOTIFY,   handleEnterNotify },
+    { XCB_BUTTON_PRESS,   handleButtonPress },
+    { XCB_BUTTON_RELEASE, handleButtonRelease },
+    { XCB_KEY_PRESS,      handleKeyPress },
+    { XCB_DESTROY_NOTIFY, handleDestroyNotify },
     { XCB_NONE,           NULL }
 };
 
