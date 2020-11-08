@@ -1,4 +1,4 @@
-*   Add boarders to indicate window focus
+*   Add borders to indicate window focus
 *   Add workspaces
 *   Add minimum window size
 *   Use library call instead of execvp()
