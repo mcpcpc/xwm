@@ -20,13 +20,16 @@ patched, configured or expanded to meet the users preference.
 COMMANDS
 ========
 
-Implemented commands:
-    Win+Button1+[drag]    interactive window move
-    Win+Button3+[drag]    interactive window resize
-    Win+Space             run launcher menu (default: dmenu_run)
-    Win+Enter             create new terminal window (default: st)
-    Win+q                 kill focused window
-    Win+Shift+q           quit window manager
+The following aliased commands have been implemented (although most of the
+default behaviors can be customized via the config.h file):
+
+    Win+Button1+[drag]     interactive window move
+    Win+Button3+[drag]     interactive window resize
+    Win+Space              run launcher menu (default: dmenu_run)
+    Win+Enter              create new terminal window (default: st)
+    Win+b                  create new browser window (default: surf)
+    Win+q                  kill focused window
+    Win+Shift+q            quit window manager
 
 INSTALL
 =======
