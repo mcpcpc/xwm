@@ -79,11 +79,7 @@ static void eventHandlerMotionNotify(xcb_generic_event_t * ev) {
 static xcb_keycode_t * xcb_get_keycodes(xcb_keysym_t keysym) {
     xcb_key_symbols_t * keysyms = xcb_key_symbols_alloc(dpy);
     xcb_keycode_t     * keycode;
-    if (!(keysyms)) {
-        keycode = NULL;
-    } else {
-        keycode = xcb_key_symbols_get_keycode(keysyms, keysym);
-    }
+    keycode = (!(keysyms) ? NULL : xcb_key_symbols_get_keycode(keysyms, keysym));
     xcb_key_symbols_free(keysyms);
     return keycode;
 }
@@ -91,11 +87,7 @@ static xcb_keycode_t * xcb_get_keycodes(xcb_keysym_t keysym) {
 static xcb_keysym_t xcb_get_keysym(xcb_keycode_t keycode) {
     xcb_key_symbols_t * keysyms = xcb_key_symbols_alloc(dpy);
     xcb_keysym_t        keysym;
-    if (!(keysyms)) {
-        keysym = 0;
-    } else {
-        keysym = xcb_key_symbols_get_keysym(keysyms, keycode, 0);
-    }
+    keysym = (!(keysyms) ? 0 : xcb_key_symbols_get_keysym(keysyms, keycode, 0));
     xcb_key_symbols_free(keysyms);
     return keysym;
 }
