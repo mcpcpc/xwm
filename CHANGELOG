@@ -16,5 +16,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Resize crash in root window.
 
 ## [0.0.3] - 2020-11-08
+## Added
+- Examples in the config.h file.
+
 ## Removed
-- <string.h> library dependency
+- <string.h> library dependency.
