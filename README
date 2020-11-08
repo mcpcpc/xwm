@@ -57,8 +57,14 @@ Using xsetroot to set a solid background color:
 Using imagemagick and a shell script to set a wallpaper:
     curl -L -o bud https://bit.ly/38aAmDt
     chmod +x bud
-    install bud /usr/bin/
-    bud ~/path/to/wallpaper/directory/
+    sudo install bud /usr/bin/
+    bud ~/wallpaper/directory/
+    echo "bud ~/wallpaper/directory/ & exec xwm" > ~./xinitrc
+
+CREDIT
+======
+
+Special thanks to the developers of dwm, sowm, lainwm, bluem and tinywm.
 
 CONTACT
 =======

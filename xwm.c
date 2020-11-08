@@ -177,9 +177,9 @@ static int die(char * errstr) {
     return 1;
 }
 
-static int compare(char * str1, char * str2) {
+static int strcmp_c(char * str1, char * str2) {
     char * c1 = str1;
-	char * c2 = str2;
+    char * c2 = str2;
     while ((* c1) && ((* c1) == (* c2))) {
         ++c1;
         ++c2;
@@ -190,7 +190,7 @@ static int compare(char * str1, char * str2) {
 
 int main(int argc, char * argv[]) {
     int ret = 0;
-    if ((argc == 2) && (compare("-v", argv[1]) == 0)) {
+    if ((argc == 2) && (strcmp_c("-v", argv[1]) == 0)) {
         ret = die("xwm-0.0.3, © 2020 Michael Czigler, see LICENSE for details\n");
     }
     if ((ret == 0) && (argc != 1)) {

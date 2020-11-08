@@ -46,5 +46,5 @@ static void grabButtons(void);
 
 /* error handling & misc. */
 static int die(char * errstr);
-static int compare(char * str1, char * str2);
+static int strcmp_c(char * str1, char * str2);
 
