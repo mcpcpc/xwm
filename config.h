@@ -29,10 +29,8 @@ static char * menucmd[] = { "dmenu_run", NULL };
 static char * browcmd[] = { "surf", "http://www.google.com", NULL };
 
 /* KEY ALIASES
- * In general, one shortcut key should exist per command alias. Refer
- * to keysymdef.h for more key definitions:
- * - https://code.woboq.org/kde/include/X11/keysymdef.h.html
- * - https://code.woboq.org/kde/include/X11/XF86keysym.h.html
+ * In general, one shortcut key should exist per alias. For more key
+ * definitions, refer to the keysymdef.h and XF86keysym.h headers.
  */
 
 static Key    keys[] = {
