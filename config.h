@@ -18,8 +18,8 @@
 
 /* ALIASED COMMANDS
  * Each space delimited argument should be passed as an additional
- * value to to the character pointer array. For example, to run
- * "foo -a bar", the array would be "{ "foo", "-a", "bar", NULL }.
+ * value to the character pointer array. For example, to run 
+ * "foo -a bar", the array would be "{ "foo", "-a", "bar", NULL }".
  * Since execvp() is a variadic functions, each argument pointer must
  * be terminated by a NULL pointer.
  */
@@ -40,4 +40,3 @@ static Key    keys[] = {
     { MOD1,      0x0071, killclient, NULL },    /* 0x0071 = XK_q */
     { MOD1|MOD2, 0x0071, closewm,    NULL }     /* 0x0071 = XK_q */
 };
-
