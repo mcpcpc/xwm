@@ -118,6 +118,7 @@ static void handleButtonRelease(xcb_generic_event_t * ev) {
 }
 
 static void handleKeyRelease(xcb_generic_event_t * ev) {
+    /* nothing to see here, carry on */
 }
 
 static void handleDestroyNotify(xcb_generic_event_t * ev) {
@@ -135,6 +136,10 @@ static void handleMapRequest(xcb_generic_event_t * ev) {
 	values[0] = XCB_CW_EVENT_MASK;
 	xcb_change_window_attributes_checked(dpy, e->window, 
 	    XCB_CW_EVENT_MASK, values);
+    if ((e->window != 0) && (e->window != root)) {
+        xcb_set_input_focus(dpy, XCB_INPUT_FOCUS_POINTER_ROOT, e->window,
+            XCB_CURRENT_TIME);
+    }
 }
 
 static int eventHandler(void) {
