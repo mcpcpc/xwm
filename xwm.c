@@ -122,6 +122,22 @@ static void handleDestroyNotify(xcb_generic_event_t * ev) {
     xcb_kill_client(dpy, e->window);
 }
 
+static void handleKeyRelease(xcb_generic_event_t * ev) {
+    /* do nothing */
+}
+
+static void handleMapRequest(xcb_generic_event_t * ev) {
+    xcb_map_request_event_t * e = (xcb_map_request_event_t *) ev;
+	values[0] = 600;
+	values[1] = 400;
+	xcb_map_window(dpy, e->window);
+    xcb_configure_window(dpy, e->window, XCB_CONFIG_WINDOW_WIDTH |
+	    XCB_CONFIG_WINDOW_HEIGHT, values);
+	values[0] = XCB_CW_EVENT_MASK;
+	xcb_change_window_attributes_checked(dpy, e->window, 
+	    XCB_CW_EVENT_MASK, values);
+}
+
 static int eventHandler(void) {
     int ret = xcb_connection_has_error(dpy);
     if (ret == 0) {
@@ -134,6 +150,15 @@ static int eventHandler(void) {
     }
     xcb_flush(dpy);
     return ret;
+}
+
+static void subscribeToEvents(void) {
+    values[0] = XCB_EVENT_MASK_SUBSTRUCTURE_REDIRECT |
+	    XCB_EVENT_MASK_STRUCTURE_NOTIFY |
+		XCB_EVENT_MASK_SUBSTRUCTURE_NOTIFY |
+		XCB_EVENT_MASK_PROPERTY_CHANGE;
+	xcb_change_window_attributes_checked(dpy, root,
+	    XCB_CW_EVENT_MASK, values);
 }
 
 static void grabKeys(void) {
@@ -198,6 +223,7 @@ int main(int argc, char * argv[]) {
     if (ret == 0) {
         scre = xcb_setup_roots_iterator(xcb_get_setup(dpy)).data;
         root = scre->root;
+		subscribeToEvents();
         grabKeys();
         grabButtons();
     }
