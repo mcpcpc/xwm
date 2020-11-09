@@ -16,6 +16,14 @@
 #define MOD1 XCB_MOD_MASK_4
 #define MOD2 XCB_MOD_MASK_SHIFT
 
+/* DEFAULT WINDOW PROPERTIES
+ * The following parameters can be used to change window and new
+ * window behavior
+ */
+
+#define WINDOW_WIDTH  600
+#define WINDOW_HEIGHT 400
+
 /* ALIASED COMMANDS
  * Each space delimited argument should be passed as an additional
  * value to the character pointer array. For example, to run 

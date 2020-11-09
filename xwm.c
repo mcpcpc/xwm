@@ -117,19 +117,18 @@ static void handleButtonRelease(xcb_generic_event_t * ev) {
     xcb_ungrab_pointer(dpy, XCB_CURRENT_TIME);
 }
 
+static void handleKeyRelease(xcb_generic_event_t * ev) {
+}
+
 static void handleDestroyNotify(xcb_generic_event_t * ev) {
     xcb_destroy_notify_event_t * e = (xcb_destroy_notify_event_t *) ev;
     xcb_kill_client(dpy, e->window);
 }
 
-static void handleKeyRelease(xcb_generic_event_t * ev) {
-    /* do nothing */
-}
-
 static void handleMapRequest(xcb_generic_event_t * ev) {
     xcb_map_request_event_t * e = (xcb_map_request_event_t *) ev;
-	values[0] = 600;
-	values[1] = 400;
+	values[0] = WINDOW_WIDTH;
+	values[1] = WINDOW_HEIGHT;
 	xcb_map_window(dpy, e->window);
     xcb_configure_window(dpy, e->window, XCB_CONFIG_WINDOW_WIDTH |
 	    XCB_CONFIG_WINDOW_HEIGHT, values);
