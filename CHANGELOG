@@ -9,16 +9,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Initial release.
 
 ## [0.0.2] - 2020-11-07
-## Added
+### Added
 - Close window command (default: Win+q).
 
 ### Fixed
 - Resize crash in root window.
 
 ## [0.0.3] - 2020-11-08
-## Added
+### Added
 - Examples in the config.h file.
 - New window height and width parameters.
 
-## Removed
-- <string.h> library dependency.
+### Removed
+- string.h library dependency.
+
+## [0.0.4] - 20202-11-09
+### Removed
+- unused stdarg.h library dependency
