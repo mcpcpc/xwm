@@ -69,15 +69,15 @@ static void handleMotionNotify(xcb_generic_event_t * ev) {
         xcb_get_geometry_cookie_t geom_now = xcb_get_geometry(dpy, win);
         xcb_get_geometry_reply_t* geom = xcb_get_geometry_reply(dpy, geom_now, NULL);
         if (!((poin->root_x <= geom->x) || (poin->root_y <= geom->y))) {
-		    values[0] = poin->root_x - geom->x;
+            values[0] = poin->root_x - geom->x;
             values[1] = poin->root_y - geom->y;
-			uint32_t min_x = WINDOW_MIN_WIDTH;
-			uint32_t min_y = WINDOW_MIN_HEIGHT;
-		    if ((values[0] >= min_x) && (values[1] >= min_y)) {
+            uint32_t min_x = WINDOW_MIN_WIDTH;
+            uint32_t min_y = WINDOW_MIN_HEIGHT;
+            if ((values[0] >= min_x) && (values[1] >= min_y)) {
                 xcb_configure_window(dpy, win, XCB_CONFIG_WINDOW_WIDTH
                     | XCB_CONFIG_WINDOW_HEIGHT, values);
-		    }
-		}
+            }
+        }
     }
 }
 
