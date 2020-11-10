@@ -71,7 +71,9 @@ static void handleMotionNotify(xcb_generic_event_t * ev) {
         if (!((poin->root_x <= geom->x) || (poin->root_y <= geom->y))) {
 		    values[0] = poin->root_x - geom->x;
             values[1] = poin->root_y - geom->y;
-		    if ((values[0] >= WINDOW_MIN_WIDTH) && (values[1] >= WINDOW_MIN_HEIGHT)) {
+			uint32_t min_x = WINDOW_MIN_WIDTH;
+			uint32_t min_y = WINDOW_MIN_HEIGHT;
+		    if ((values[0] >= min_x) && (values[1] >= min_y)) {
                 xcb_configure_window(dpy, win, XCB_CONFIG_WINDOW_WIDTH
                     | XCB_CONFIG_WINDOW_HEIGHT, values);
 		    }
