@@ -92,6 +92,13 @@ static xcb_keysym_t xcb_get_keysym(xcb_keycode_t keycode) {
     return keysym;
 }
 
+static void setFocus(xcb_drawable_t window) {
+    if ((window != 0) && (window != root)) {
+        xcb_set_input_focus(dpy, XCB_INPUT_FOCUS_POINTER_ROOT, window,
+            XCB_CURRENT_TIME);
+    }
+}
+
 static void handleKeyPress(xcb_generic_event_t * ev) {
     xcb_key_press_event_t * e = ( xcb_key_press_event_t *) ev;
     xcb_keysym_t keysym = xcb_get_keysym(e->detail);
@@ -106,11 +113,7 @@ static void handleKeyPress(xcb_generic_event_t * ev) {
 
 static void handleEnterNotify(xcb_generic_event_t * ev) {
     xcb_enter_notify_event_t * e = ( xcb_enter_notify_event_t *) ev;
-    xcb_drawable_t win_e = e->event;
-    if ((win_e != 0) && (win_e != root)) {
-        xcb_set_input_focus(dpy, XCB_INPUT_FOCUS_POINTER_ROOT, win_e,
-            XCB_CURRENT_TIME);
-    }
+    setFocus(e->event);
 }
 
 static void handleButtonRelease(xcb_generic_event_t * ev) {
@@ -128,18 +131,19 @@ static void handleDestroyNotify(xcb_generic_event_t * ev) {
 
 static void handleMapRequest(xcb_generic_event_t * ev) {
     xcb_map_request_event_t * e = (xcb_map_request_event_t *) ev;
-	values[0] = WINDOW_WIDTH;
-	values[1] = WINDOW_HEIGHT;
-	xcb_map_window(dpy, e->window);
-    xcb_configure_window(dpy, e->window, XCB_CONFIG_WINDOW_WIDTH |
-	    XCB_CONFIG_WINDOW_HEIGHT, values);
-	values[0] = XCB_CW_EVENT_MASK;
-	xcb_change_window_attributes_checked(dpy, e->window, 
-	    XCB_CW_EVENT_MASK, values);
-    if ((e->window != 0) && (e->window != root)) {
-        xcb_set_input_focus(dpy, XCB_INPUT_FOCUS_POINTER_ROOT, e->window,
-            XCB_CURRENT_TIME);
+    xcb_map_window(dpy, e->window);
+    if ((scre->root != e->window) && (0 != e->window)) {
+        uint32_t vals[2];
+        vals[0] = WINDOW_WIDTH;
+        vals[1] = WINDOW_HEIGHT;
+        xcb_configure_window(dpy, e->window, XCB_CONFIG_WINDOW_WIDTH |
+            XCB_CONFIG_WINDOW_HEIGHT, values);
+        xcb_flush(dpy);
     }
+    values[0] = XCB_EVENT_MASK_ENTER_WINDOW;
+    xcb_change_window_attributes_checked(dpy, e->window,
+        XCB_CW_EVENT_MASK, values);
+    setFocus(e->window);
 }
 
 static int eventHandler(void) {
@@ -158,11 +162,11 @@ static int eventHandler(void) {
 
 static void subscribeToEvents(void) {
     values[0] = XCB_EVENT_MASK_SUBSTRUCTURE_REDIRECT |
-	    XCB_EVENT_MASK_STRUCTURE_NOTIFY |
-		XCB_EVENT_MASK_SUBSTRUCTURE_NOTIFY |
-		XCB_EVENT_MASK_PROPERTY_CHANGE;
-	xcb_change_window_attributes_checked(dpy, root,
-	    XCB_CW_EVENT_MASK, values);
+        XCB_EVENT_MASK_STRUCTURE_NOTIFY |
+        XCB_EVENT_MASK_SUBSTRUCTURE_NOTIFY |
+        XCB_EVENT_MASK_PROPERTY_CHANGE;
+    xcb_change_window_attributes_checked(dpy, root,
+        XCB_CW_EVENT_MASK, values);
 }
 
 static void grabKeys(void) {
@@ -227,7 +231,7 @@ int main(int argc, char * argv[]) {
     if (ret == 0) {
         scre = xcb_setup_roots_iterator(xcb_get_setup(dpy)).data;
         root = scre->root;
-		subscribeToEvents();
+        subscribeToEvents();
         grabKeys();
         grabButtons();
     }
