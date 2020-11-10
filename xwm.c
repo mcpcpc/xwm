@@ -1,6 +1,5 @@
 /* See LICENSE file for license details. */
 #include <stdarg.h>
-#include <string.h>
 #include <unistd.h>
 #include <xcb/xcb.h>
 #include <xcb/xcb_keysyms.h>
@@ -33,7 +32,7 @@ static void spawn(char **com) {
     }
 }
 
-static void eventHandlerButtonPress(xcb_generic_event_t * ev) {
+static void handleButtonPress(xcb_generic_event_t * ev) {
     xcb_button_press_event_t  * e = (xcb_button_press_event_t *) ev;
     win = e->child;
     values[0] = XCB_STACK_MODE_ABOVE;
@@ -53,7 +52,7 @@ static void eventHandlerButtonPress(xcb_generic_event_t * ev) {
         XCB_GRAB_MODE_ASYNC, XCB_GRAB_MODE_ASYNC, root, XCB_NONE, XCB_CURRENT_TIME);
 }
 
-static void eventHandlerMotionNotify(xcb_generic_event_t * ev) {
+static void handleMotionNotify(xcb_generic_event_t * ev) {
     xcb_query_pointer_cookie_t coord = xcb_query_pointer(dpy, root);
     xcb_query_pointer_reply_t * poin = xcb_query_pointer_reply(dpy, coord, 0);
     uint32_t val[2] = {1, 3};
@@ -80,11 +79,7 @@ static void eventHandlerMotionNotify(xcb_generic_event_t * ev) {
 static xcb_keycode_t * xcb_get_keycodes(xcb_keysym_t keysym) {
     xcb_key_symbols_t * keysyms = xcb_key_symbols_alloc(dpy);
     xcb_keycode_t     * keycode;
-    if (!(keysyms)) {
-        keycode = NULL;
-    } else {
-        keycode = xcb_key_symbols_get_keycode(keysyms, keysym);
-    }
+    keycode = (!(keysyms) ? NULL : xcb_key_symbols_get_keycode(keysyms, keysym));
     xcb_key_symbols_free(keysyms);
     return keycode;
 }
@@ -92,16 +87,19 @@ static xcb_keycode_t * xcb_get_keycodes(xcb_keysym_t keysym) {
 static xcb_keysym_t xcb_get_keysym(xcb_keycode_t keycode) {
     xcb_key_symbols_t * keysyms = xcb_key_symbols_alloc(dpy);
     xcb_keysym_t        keysym;
-    if (!(keysyms)) {
-        keysym = 0;
-    } else {
-        keysym = xcb_key_symbols_get_keysym(keysyms, keycode, 0);
-    }
+    keysym = (!(keysyms) ? 0 : xcb_key_symbols_get_keysym(keysyms, keycode, 0));
     xcb_key_symbols_free(keysyms);
     return keysym;
 }
 
-static void eventHandlerKeyPress(xcb_generic_event_t * ev) {
+static void setFocus(xcb_drawable_t window) {
+    if ((window != 0) && (window != root)) {
+        xcb_set_input_focus(dpy, XCB_INPUT_FOCUS_POINTER_ROOT, window,
+            XCB_CURRENT_TIME);
+    }
+}
+
+static void handleKeyPress(xcb_generic_event_t * ev) {
     xcb_key_press_event_t * e = ( xcb_key_press_event_t *) ev;
     xcb_keysym_t keysym = xcb_get_keysym(e->detail);
     win = e->child;
@@ -113,22 +111,39 @@ static void eventHandlerKeyPress(xcb_generic_event_t * ev) {
     }
 }
 
-static void eventHandlerEnterNotify(xcb_generic_event_t * ev) {
+static void handleEnterNotify(xcb_generic_event_t * ev) {
     xcb_enter_notify_event_t * e = ( xcb_enter_notify_event_t *) ev;
-    xcb_drawable_t win_e = e->event;
-    if ((win_e != 0) && (win_e != root)) {
-        xcb_set_input_focus(dpy, XCB_INPUT_FOCUS_POINTER_ROOT, win_e,
-            XCB_CURRENT_TIME);
-    }
+    setFocus(e->event);
 }
 
-static void eventHandlerButtonRelease(xcb_generic_event_t * ev) {
+static void handleButtonRelease(xcb_generic_event_t * ev) {
     xcb_ungrab_pointer(dpy, XCB_CURRENT_TIME);
 }
 
-static void eventHandlerDestroyNotify(xcb_generic_event_t * ev) {
+static void handleKeyRelease(xcb_generic_event_t * ev) {
+    /* nothing to see here, carry on */
+}
+
+static void handleDestroyNotify(xcb_generic_event_t * ev) {
     xcb_destroy_notify_event_t * e = (xcb_destroy_notify_event_t *) ev;
     xcb_kill_client(dpy, e->window);
+}
+
+static void handleMapRequest(xcb_generic_event_t * ev) {
+    xcb_map_request_event_t * e = (xcb_map_request_event_t *) ev;
+    xcb_map_window(dpy, e->window);
+    if ((scre->root != e->window) && (0 != e->window)) {
+        uint32_t vals[2];
+        vals[0] = WINDOW_WIDTH;
+        vals[1] = WINDOW_HEIGHT;
+        xcb_configure_window(dpy, e->window, XCB_CONFIG_WINDOW_WIDTH |
+            XCB_CONFIG_WINDOW_HEIGHT, vals);
+        xcb_flush(dpy);
+    }
+    values[0] = XCB_EVENT_MASK_ENTER_WINDOW;
+    xcb_change_window_attributes_checked(dpy, e->window,
+        XCB_CW_EVENT_MASK, values);
+    setFocus(e->window);
 }
 
 static int eventHandler(void) {
@@ -143,6 +158,15 @@ static int eventHandler(void) {
     }
     xcb_flush(dpy);
     return ret;
+}
+
+static void subscribeToEvents(void) {
+    values[0] = XCB_EVENT_MASK_SUBSTRUCTURE_REDIRECT
+        | XCB_EVENT_MASK_STRUCTURE_NOTIFY
+        | XCB_EVENT_MASK_SUBSTRUCTURE_NOTIFY
+        | XCB_EVENT_MASK_PROPERTY_CHANGE;
+    xcb_change_window_attributes_checked(dpy, root,
+        XCB_CW_EVENT_MASK, values);
 }
 
 static void grabKeys(void) {
@@ -178,10 +202,21 @@ static int die(char * errstr) {
     return 1;
 }
 
+static int strcmp_c(char * str1, char * str2) {
+    char * c1 = str1;
+    char * c2 = str2;
+    while ((* c1) && ((* c1) == (* c2))) {
+        ++c1;
+        ++c2;
+    }
+    int n = (* c1) - (* c2);
+    return n;
+}
+
 int main(int argc, char * argv[]) {
     int ret = 0;
-    if ((argc == 2) && (strcmp("-v", argv[1]) == 0)) {
-        ret = die("xwm-0.0.2, © 2020 Michael Czigler, see LICENSE for details\n");
+    if ((argc == 2) && (strcmp_c("-v", argv[1]) == 0)) {
+        ret = die("xwm-0.0.3, © 2020 Michael Czigler, see LICENSE for details\n");
     }
     if ((ret == 0) && (argc != 1)) {
         ret = die("usage: xwm [-v]\n");
@@ -196,6 +231,7 @@ int main(int argc, char * argv[]) {
     if (ret == 0) {
         scre = xcb_setup_roots_iterator(xcb_get_setup(dpy)).data;
         root = scre->root;
+        subscribeToEvents();
         grabKeys();
         grabButtons();
     }
