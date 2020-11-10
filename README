@@ -10,8 +10,7 @@ FEATURES
 BUILD REQUIREMENTS
 ==================
 
-Other than libxcb, xwm also uses several default utilities which can be
-patched, configured or expanded to meet the users preference.
+libxcb, along with any default or user defined utility:
 
     application launcher   dmenu - https://git.suckless.org/dmenu
     terminal emulator      st - https://git.suckless.org/st
