@@ -1,5 +1,4 @@
 /* See LICENSE file for license details. */
-#include <stdarg.h>
 #include <unistd.h>
 #include <xcb/xcb.h>
 #include <xcb/xcb_keysyms.h>
@@ -69,10 +68,16 @@ static void handleMotionNotify(xcb_generic_event_t * ev) {
     if ((values[2] == val[1]) && (win != 0)) {
         xcb_get_geometry_cookie_t geom_now = xcb_get_geometry(dpy, win);
         xcb_get_geometry_reply_t* geom = xcb_get_geometry_reply(dpy, geom_now, NULL);
-        values[0] = poin->root_x - geom->x;
-        values[1] = poin->root_y - geom->y;
-        xcb_configure_window(dpy, win, XCB_CONFIG_WINDOW_WIDTH
-            | XCB_CONFIG_WINDOW_HEIGHT, values);
+        if (!((poin->root_x <= geom->x) || (poin->root_y <= geom->y))) {
+            values[0] = poin->root_x - geom->x;
+            values[1] = poin->root_y - geom->y;
+            uint32_t min_x = WINDOW_MIN_WIDTH;
+            uint32_t min_y = WINDOW_MIN_HEIGHT;
+            if ((values[0] >= min_x) && (values[1] >= min_y)) {
+                xcb_configure_window(dpy, win, XCB_CONFIG_WINDOW_WIDTH
+                    | XCB_CONFIG_WINDOW_HEIGHT, values);
+            }
+        }
     }
 }
 
@@ -216,7 +221,7 @@ static int strcmp_c(char * str1, char * str2) {
 int main(int argc, char * argv[]) {
     int ret = 0;
     if ((argc == 2) && (strcmp_c("-v", argv[1]) == 0)) {
-        ret = die("xwm-0.0.3, © 2020 Michael Czigler, see LICENSE for details\n");
+        ret = die("xwm-0.0.4, © 2020 Michael Czigler, see LICENSE for details\n");
     }
     if ((ret == 0) && (argc != 1)) {
         ret = die("usage: xwm [-v]\n");

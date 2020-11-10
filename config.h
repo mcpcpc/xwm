@@ -21,8 +21,10 @@
  * window behavior
  */
 
-#define WINDOW_WIDTH  600
-#define WINDOW_HEIGHT 400
+#define WINDOW_WIDTH      600
+#define WINDOW_HEIGHT     400
+#define WINDOW_MIN_WIDTH  60
+#define WINDOW_MIN_HEIGHT 40
 
 /* ALIASED COMMANDS
  * Each space delimited argument should be passed as an additional
