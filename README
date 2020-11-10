@@ -68,12 +68,8 @@ Usimg startx to run xwm:
 Using xbg to set a solid background color:
     xbg red
 
-Using imagemagick and a shell script to set a wallpaper:
-    curl -L -o bud https://bit.ly/38aAmDt
-    chmod +x bud
-    sudo install bud /usr/bin/
-    bud ~/wallpaper/directory/
-    echo "bud ~/wallpaper/directory/ & exec xwm" > ~./xinitrc
+Using imagemagick to set a wallpaper:
+    display -window root background.png
 
 Patching xwm (after copying the *.patch into the source dir.):
     patch -p0 < mypatch.patch
