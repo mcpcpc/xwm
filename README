@@ -44,6 +44,17 @@ Building and installing on KISS Linux:
     kiss b xwm
     kiss i xwm
 
+PATCHES
+=======
+
+xwm is considered a minimally viable window manager solution and,
+therefore, is missing several features that many users would 
+consider "essential". For additional features, I have provided
+instructions below for patching, as well as a respository for 
+sharing and hosting user created patches:
+    http://github.com/mcpcpc/xwm-patches
+
+
 EXAMPLES
 ========
 
@@ -54,8 +65,8 @@ Usimg startx to run xwm:
     echo "exec xwm" > ~/.xinitrc
     startx
 
-Using xsetroot to set a solid background color:
-    xsetroot -solid red
+Using xbg to set a solid background color:
+    xbg red
 
 Using imagemagick and a shell script to set a wallpaper:
     curl -L -o bud https://bit.ly/38aAmDt
@@ -64,10 +75,8 @@ Using imagemagick and a shell script to set a wallpaper:
     bud ~/wallpaper/directory/
     echo "bud ~/wallpaper/directory/ & exec xwm" > ~./xinitrc
 
-CREDIT
-======
-
-Special thanks to the developers of dwm, sowm, lainwm, bluem and tinywm.
+Patching xwm (after copying the *.patch into the source dir.):
+    patch -p0 < mypatch.patch
 
 CONTACT
 =======

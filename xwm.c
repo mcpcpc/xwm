@@ -68,10 +68,14 @@ static void handleMotionNotify(xcb_generic_event_t * ev) {
     if ((values[2] == val[1]) && (win != 0)) {
         xcb_get_geometry_cookie_t geom_now = xcb_get_geometry(dpy, win);
         xcb_get_geometry_reply_t* geom = xcb_get_geometry_reply(dpy, geom_now, NULL);
-        values[0] = poin->root_x - geom->x;
-        values[1] = poin->root_y - geom->y;
-        xcb_configure_window(dpy, win, XCB_CONFIG_WINDOW_WIDTH
-            | XCB_CONFIG_WINDOW_HEIGHT, values);
+        if (!((poin->root_x <= geom->x) || (poin->root_y <= geom->y))) {
+		    values[0] = poin->root_x - geom->x;
+            values[1] = poin->root_y - geom->y;
+		    if ((values[0] >= WINDOW_MIN_WIDTH) && (values[1] >= WINDOW_MIN_HEIGHT)) {
+                xcb_configure_window(dpy, win, XCB_CONFIG_WINDOW_WIDTH
+                    | XCB_CONFIG_WINDOW_HEIGHT, values);
+		    }
+		}
     }
 }
 

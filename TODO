@@ -1,4 +1,2 @@
-*   Add borders to indicate window focus
-*   Add workspaces
-*   Add minimum window size
-*   Use library call instead of execvp()
+*   Add borders to indicate window focus (as a patch?)
+*   Add workspaces (as patch)

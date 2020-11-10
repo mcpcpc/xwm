@@ -18,11 +18,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.0.3] - 2020-11-08
 ### Added
 - Examples in the config.h file.
-- New window height and width parameters.
+- Window height and width parameters.
 
 ### Removed
 - string.h library dependency.
 
-## [0.0.4] - 20202-11-09
+## [0.0.4] - 20202-11-10
+### Added
+- Instructions for patches and the patching process.
+- Minimum window height and width parameters.
+
 ### Removed
-- unused stdarg.h library dependency
+- Unused stdarg.h library dependency.
+
+### Fixed
+- Crash when pointer x/y cords less than window origin.
