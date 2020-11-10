@@ -137,7 +137,7 @@ static void handleMapRequest(xcb_generic_event_t * ev) {
         vals[0] = WINDOW_WIDTH;
         vals[1] = WINDOW_HEIGHT;
         xcb_configure_window(dpy, e->window, XCB_CONFIG_WINDOW_WIDTH |
-            XCB_CONFIG_WINDOW_HEIGHT, values);
+            XCB_CONFIG_WINDOW_HEIGHT, vals);
         xcb_flush(dpy);
     }
     values[0] = XCB_EVENT_MASK_ENTER_WINDOW;
@@ -161,10 +161,10 @@ static int eventHandler(void) {
 }
 
 static void subscribeToEvents(void) {
-    values[0] = XCB_EVENT_MASK_SUBSTRUCTURE_REDIRECT |
-        XCB_EVENT_MASK_STRUCTURE_NOTIFY |
-        XCB_EVENT_MASK_SUBSTRUCTURE_NOTIFY |
-        XCB_EVENT_MASK_PROPERTY_CHANGE;
+    values[0] = XCB_EVENT_MASK_SUBSTRUCTURE_REDIRECT
+        | XCB_EVENT_MASK_STRUCTURE_NOTIFY
+        | XCB_EVENT_MASK_SUBSTRUCTURE_NOTIFY
+        | XCB_EVENT_MASK_PROPERTY_CHANGE;
     xcb_change_window_attributes_checked(dpy, root,
         XCB_CW_EVENT_MASK, values);
 }
