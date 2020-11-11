@@ -19,8 +19,8 @@ libxcb, along with any default or user defined utility:
 COMMANDS
 ========
 
-The following aliased commands have been implemented (although most of the
-default behaviors can be customized via the config.h file):
+The following aliased commands have been implemented (although most
+of the default behaviors can be customized via the config.h file):
 
     Win+Button1+[drag]     interactive window move
     Win+Button3+[drag]     interactive window resize
@@ -72,6 +72,13 @@ Using imagemagick to set a wallpaper:
 
 Patching xwm (after copying the *.patch into the source dir.):
     patch -p0 < mypatch.patch
+
+DISCLAIMER
+==========
+
+xwm ("XCB Window Manager") is an homage to the original "X Window
+Manager", which is now defunct and unmaintained. Both projects
+are unaffiliated and do not share any common source code.
 
 CONTACT
 =======
