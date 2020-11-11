@@ -73,6 +73,13 @@ Using imagemagick to set a wallpaper:
 Patching xwm (after copying the *.patch into the source dir.):
     patch -p0 < mypatch.patch
 
+DISCLAIMER
+==========
+
+xwm ("XCB Window Manager") is an homage to the original "X Window
+Manager", which is now defunct and unmaintained. Both projects
+are unaffiliated and do not share any common source code.
+
 CONTACT
 =======
 
