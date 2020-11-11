@@ -1,4 +1,4 @@
-.\" Manpage for xwm.
+.\"Manpage for xwm.
 .TH XWM 1 "NOVEMBER 2020" Linux "User Manuals"
 .SH NAME
 xwm \- a tiny XCB floating window managers
@@ -6,22 +6,62 @@ xwm \- a tiny XCB floating window managers
 .B xwm [-v]
 .SH DESCRIPTION
 .B xwm
-is a tiny floating window manager implemented using 
-the XCB protocol. Other than 
+is a tiny floating window manager implemented using
+the XCB protocol. Other than
 .BR libxcb (1),
-xwm also specifies third-party utilitiies for command 
-alias, including the 
+xwm relies on third-party tools, which can be
+configured or expanded to meet the user's preference.
+The default configuration provides support and
+command aliases for the
 .BR surf (1)
 web browser,
 .BR st (1)
 terminal emulator and
 .BR dmenu (1)
-application launcher. Defaults for these command 
-aliases can be configured or patched to the user's
-preference.
+application launcher.
 .SH OPTIONS
 .IP -v
 Prints the current xwm version.
+.SH DEFAULT KEY BINDINGS
+.B xwm
+may be controlled from an attached client using a key
+combination of a prefix key, the 'Super' (Win) key by
+default, followed by a command key.
+.PP
+The default command key bindings are:
+.TS
+tab(;);
+lb l l.
+_
+Win-Button1;[drag];T{
+Interactive window move.
+T}
+_
+Win-Button3;[drag];T{
+Interactive window resize.
+T}
+_
+Win;Space;T{
+Run launcher menu (default: dmenu_run).
+T}
+_
+Win;Enter;T{
+Create new terminal window (default: st).
+T}
+_
+Win;b;T{
+Create new browser window (default: surf).
+T}
+_
+Win;q;T{
+Kill focused window.
+T}
+_
+Win-Shift;q;T{
+Quite window manager.
+T}
+_
+.TE
 .SH BUGS
 No known bugs.
 .SH AUTHOR

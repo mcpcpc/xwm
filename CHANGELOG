@@ -33,3 +33,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Crash when pointer x/y cords less than window origin.
+
+## [0.0.5] - 20202-11-11
+### Added
+- Default key bindings in man page.
