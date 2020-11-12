@@ -13,8 +13,8 @@
  *     XCB_MOD_MASK_ANY
  */
 
-#define MOD1 XCB_MOD_MASK_4
-#define MOD2 XCB_MOD_MASK_SHIFT
+#define MOD1                   XCB_MOD_MASK_4
+#define MOD2                   XCB_MOD_MASK_SHIFT
 
 /* DEFAULT WINDOW PROPERTIES
  * The following parameters can be used to change existing and new

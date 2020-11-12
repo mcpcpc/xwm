@@ -24,6 +24,7 @@ static void closewm(char ** com);
 
 /* window behavior */
 static void setFocus(xcb_drawable_t window);
+static void setWindowDims(xcb_drawable_t window);
 static void setBorderWidth(xcb_drawable_t window);
 static void setBorderColor(xcb_drawable_t window, int focus);
 
@@ -31,6 +32,7 @@ static void setBorderColor(xcb_drawable_t window, int focus);
 static int eventHandler(void);
 static void handleMotionNotify(xcb_generic_event_t * ev);
 static void handleEnterNotify(xcb_generic_event_t * ev);
+static void handleLeaveNotify(xcb_generic_event_t * ev);
 static void handleDestroyNotify(xcb_generic_event_t * ev);
 static void handleButtonPress(xcb_generic_event_t * ev);
 static void handleButtonRelease(xcb_generic_event_t * ev);
@@ -40,6 +42,7 @@ static void handleMapRequest(xcb_generic_event_t * ev);
 static handler_func_t handler_funs[] = {
     { XCB_MOTION_NOTIFY,  handleMotionNotify },
     { XCB_ENTER_NOTIFY,   handleEnterNotify },
+    { XCB_LEAVE_NOTIFY,   handleLeaveNotify },
     { XCB_DESTROY_NOTIFY, handleDestroyNotify },
     { XCB_BUTTON_PRESS,   handleButtonPress },
     { XCB_BUTTON_RELEASE, handleButtonRelease },
