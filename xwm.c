@@ -159,7 +159,7 @@ static void handleMapRequest(xcb_generic_event_t * ev) {
             XCB_CONFIG_WINDOW_HEIGHT, vals);
         xcb_flush(dpy);
         setBorderWidth(e->window);
-        setBorderColor(e->window, 0):
+        setBorderColor(e->window, 0);
     }
     values[0] = XCB_EVENT_MASK_ENTER_WINDOW;
     xcb_change_window_attributes_checked(dpy, e->window,
