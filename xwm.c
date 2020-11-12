@@ -115,7 +115,7 @@ static void setBorderColor(xcb_window_t window, int focus) {
 
 static void setBorderWidth(xcb_window_t window) {
     if ((BORDER_WIDTH > 0) && (scre->root != window) && (0 != window)) {
-        uint32_t vals[1];
+        uint32_t vals[2];
         vals[0] = BORDER_WIDTH;
         xcb_configure_window(dpy, window, XCB_CONFIG_WINDOW_BORDER_WIDTH, vals);
         xcb_flush(dpy);
