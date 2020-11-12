@@ -23,7 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 - string.h library dependency.
 
-## [0.0.4] - 20202-11-10
+## [0.0.4] - 2020-11-10
 ### Added
 - Instructions for patches and the patching process.
 - Minimum window height and width parameters.
@@ -34,7 +34,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Crash when pointer x/y cords less than window origin.
 
-## [0.0.5] - 20202-11-11
+## [0.0.5] - 2020-11-11
 ### Added
 - Default key bindings in man page.
 - Disclaimer section in README.
+
+## [0.0.6] - 2020-11-12
+### Added
+- Window borders and color definitions.
