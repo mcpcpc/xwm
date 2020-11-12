@@ -18,7 +18,7 @@
 
 /* DEFAULT WINDOW PROPERTIES
  * The following parameters can be used to change existing and new
- * window behavior
+ * window behavior.
  */
 
 #define WINDOW_WIDTH           600
@@ -53,3 +53,4 @@ static Key    keys[] = {
     { MOD1,      0x0071, killclient, NULL },    /* 0x0071 = XK_q */
     { MOD1|MOD2, 0x0071, closewm,    NULL }     /* 0x0071 = XK_q */
 };
+

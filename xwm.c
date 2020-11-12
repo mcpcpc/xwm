@@ -148,12 +148,12 @@ static void handleKeyPress(xcb_generic_event_t * ev) {
 static void handleEnterNotify(xcb_generic_event_t * ev) {
     xcb_enter_notify_event_t * e = ( xcb_enter_notify_event_t *) ev;
     setFocus(e->event);
-	setBorderColor(e->event, 1);
+    setBorderColor(e->event, 1);
 }
 
 static void handleLeaveNotify(xcb_generic_event_t * ev) {
     xcb_leave_notify_event_t * e = ( xcb_leave_notify_event_t *) ev;
-	setBorderColor(e->event, 0);
+    setBorderColor(e->event, 0);
 }
 
 static void handleButtonRelease(xcb_generic_event_t * ev) {
@@ -172,7 +172,7 @@ static void handleDestroyNotify(xcb_generic_event_t * ev) {
 static void handleMapRequest(xcb_generic_event_t * ev) {
     xcb_map_request_event_t * e = (xcb_map_request_event_t *) ev;
     xcb_map_window(dpy, e->window);
-	setWindowDimensions(e->window);
+    setWindowDimensions(e->window);
     setBorderWidth(e->window);
     setBorderColor(e->window, 0);
     values[0] = XCB_EVENT_MASK_ENTER_WINDOW | XCB_EVENT_MASK_LEAVE_WINDOW;
