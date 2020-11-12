@@ -104,6 +104,20 @@ static void setFocus(xcb_drawable_t window) {
     }
 }
 
+static void setBorderColor(xcb_window_t window, int focus) {
+    uint32_t vals[1];
+    vals[0] = focus ? BORDER_COLOR_FOCUSED : BORDER_COLOR_UNFOCUSED;
+    xcb_change_window_attributes(dpy, window, XCB_CW_BORDER_PIXEL, vals);
+    xcb_flush(dpy);
+}
+
+static void setBorderWidth(xcb_window_t window) {
+    uint32_t vals[1];
+    vals[0] = BORDER_WIDTH;
+    xcb_configure_window(dpy, window, XCB_CONFIG_WINDOW_BORDER_WIDTH, vals);
+    xcb_flush(dpy);
+}
+
 static void handleKeyPress(xcb_generic_event_t * ev) {
     xcb_key_press_event_t * e = ( xcb_key_press_event_t *) ev;
     xcb_keysym_t keysym = xcb_get_keysym(e->detail);
@@ -144,6 +158,8 @@ static void handleMapRequest(xcb_generic_event_t * ev) {
         xcb_configure_window(dpy, e->window, XCB_CONFIG_WINDOW_WIDTH |
             XCB_CONFIG_WINDOW_HEIGHT, vals);
         xcb_flush(dpy);
+        setBorderWidth(e->window);
+        setBorderColor(e->window):
     }
     values[0] = XCB_EVENT_MASK_ENTER_WINDOW;
     xcb_change_window_attributes_checked(dpy, e->window,

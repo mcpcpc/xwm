@@ -17,14 +17,17 @@
 #define MOD2 XCB_MOD_MASK_SHIFT
 
 /* DEFAULT WINDOW PROPERTIES
- * The following parameters can be used to change window and new
+ * The following parameters can be used to change existing and new
  * window behavior
  */
 
-#define WINDOW_WIDTH      600
-#define WINDOW_HEIGHT     400
-#define WINDOW_MIN_WIDTH  60
-#define WINDOW_MIN_HEIGHT 40
+#define WINDOW_WIDTH           600
+#define WINDOW_HEIGHT          400
+#define WINDOW_MIN_WIDTH       60
+#define WINDOW_MIN_HEIGHT      40
+#define BORDER_WIDTH           2
+#define BORDER_COLOR_UNFOCUSED 0x0000FF
+#define BORDER_COLOR_FOCUSED   0xFF0000
 
 /* ALIASED COMMANDS
  * Each space delimited argument should be passed as an additional

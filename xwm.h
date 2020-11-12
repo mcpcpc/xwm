@@ -22,6 +22,11 @@ static void killclient(char **com);
 static void spawn(char **com);
 static void closewm(char ** com);
 
+/* window behavior */
+static void setFocus(xcb_drawable_t window);
+static void setBorderWidth(xcb_drawable_t window);
+static void setBorderColor(xcb_drawable_t window, int focus);
+
 /* event hander actions */
 static int eventHandler(void);
 static void handleMotionNotify(xcb_generic_event_t * ev);
