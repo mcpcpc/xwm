@@ -105,7 +105,7 @@ static void setFocus(xcb_drawable_t window) {
 }
 
 static void setBorderColor(xcb_window_t window, int focus) {
-    if ((scre->root != window) && (0 != window)) {
+    if ((BORDER_WIDTH > 0) && (scre->root != window) && (0 != window)) {
         uint32_t vals[1];
         vals[0] = focus ? BORDER_COLOR_FOCUSED : BORDER_COLOR_UNFOCUSED;
         xcb_change_window_attributes(dpy, window, XCB_CW_BORDER_PIXEL, vals);
@@ -114,7 +114,7 @@ static void setBorderColor(xcb_window_t window, int focus) {
 }
 
 static void setBorderWidth(xcb_window_t window) {
-    if ((scre->root != window) && (0 != window)) {
+    if ((BORDER_WIDTH > 0) && (scre->root != window) && (0 != window)) {
         uint32_t vals[1];
         vals[0] = BORDER_WIDTH;
         xcb_configure_window(dpy, window, XCB_CONFIG_WINDOW_BORDER_WIDTH, vals);
@@ -122,7 +122,7 @@ static void setBorderWidth(xcb_window_t window) {
     }
 }
 
-static void setWindowDims(xcb_window_t window) {
+static void setWindowDimensions(xcb_window_t window) {
     if ((scre->root != window) && (0 != window)) {
         uint32_t vals[2];
         vals[0] = WINDOW_WIDTH;
@@ -172,7 +172,7 @@ static void handleDestroyNotify(xcb_generic_event_t * ev) {
 static void handleMapRequest(xcb_generic_event_t * ev) {
     xcb_map_request_event_t * e = (xcb_map_request_event_t *) ev;
     xcb_map_window(dpy, e->window);
-	setWindowDims(e->window);
+	setWindowDimensions(e->window);
     setBorderWidth(e->window);
     setBorderColor(e->window, 0);
     values[0] = XCB_EVENT_MASK_ENTER_WINDOW | XCB_EVENT_MASK_LEAVE_WINDOW;
