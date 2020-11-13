@@ -10,7 +10,7 @@ FEATURES
 BUILD REQUIREMENTS
 ==================
 
-libxcb, along with any default or user defined utility:
+libxcb, along with any default or user defined utilities:
 
     application launcher   dmenu - https://git.suckless.org/dmenu
     terminal emulator      st - https://git.suckless.org/st
@@ -76,9 +76,9 @@ Patching xwm (after copying the *.patch into the source dir.):
 DISCLAIMER
 ==========
 
-xwm ("XCB Window Manager") is an homage to the original "X Window
-Manager", which is now defunct and unmaintained. Both projects
-are unaffiliated and do not share any common source code.
+xwm ("XCB Window Manager") is an homage to the original and 
+now-defunct "X Window Manager". Both projects are unaffiliated 
+and do not share any common source code.
 
 CONTACT
 =======
