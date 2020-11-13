@@ -25,8 +25,8 @@
 #define WINDOW_HEIGHT          400
 #define WINDOW_MIN_WIDTH       60
 #define WINDOW_MIN_HEIGHT      40
-#define BORDER_WIDTH           2        /* 0 = no border effect */
-#define BORDER_COLOR_UNFOCUSED 0x00FFFF /* 0xRRGGBB */
+#define BORDER_WIDTH           1        /* 0 = no border effect */
+#define BORDER_COLOR_UNFOCUSED 0xC0C0C0 /* 0xRRGGBB */
 #define BORDER_COLOR_FOCUSED   0xFFFFFF /* 0xRRGGBB */
 
 /* ALIASED COMMANDS
