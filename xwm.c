@@ -8,6 +8,7 @@
 static xcb_connection_t * dpy;
 static xcb_screen_t     * scre;
 static xcb_drawable_t     win;
+static xcb_drawable_t     winprev;
 static xcb_drawable_t     root;
 static uint32_t           values[3];
 
@@ -102,6 +103,10 @@ static void setFocus(xcb_drawable_t window) {
         xcb_set_input_focus(dpy, XCB_INPUT_FOCUS_POINTER_ROOT, window,
             XCB_CURRENT_TIME);
     }
+    setBorderColor(window, 1);
+    if (winprev != window) {
+        setBorderColor(winprev, 0);
+    }
 }
 
 static void setBorderColor(xcb_window_t window, int focus) {
@@ -148,12 +153,11 @@ static void handleKeyPress(xcb_generic_event_t * ev) {
 static void handleEnterNotify(xcb_generic_event_t * ev) {
     xcb_enter_notify_event_t * e = ( xcb_enter_notify_event_t *) ev;
     setFocus(e->event);
-    setBorderColor(e->event, 1);
 }
 
 static void handleLeaveNotify(xcb_generic_event_t * ev) {
     xcb_leave_notify_event_t * e = ( xcb_leave_notify_event_t *) ev;
-    setBorderColor(e->event, 0);
+    winprev = e->event;
 }
 
 static void handleButtonRelease(xcb_generic_event_t * ev) {
@@ -174,7 +178,6 @@ static void handleMapRequest(xcb_generic_event_t * ev) {
     xcb_map_window(dpy, e->window);
     setWindowDimensions(e->window);
     setBorderWidth(e->window);
-    setBorderColor(e->window, 0);
     values[0] = XCB_EVENT_MASK_ENTER_WINDOW | XCB_EVENT_MASK_LEAVE_WINDOW;
     xcb_change_window_attributes_checked(dpy, e->window,
         XCB_CW_EVENT_MASK, values);
@@ -251,7 +254,7 @@ static int strcmp_c(char * str1, char * str2) {
 int main(int argc, char * argv[]) {
     int ret = 0;
     if ((argc == 2) && (strcmp_c("-v", argv[1]) == 0)) {
-        ret = die("xwm-0.0.6, © 2020 Michael Czigler, see LICENSE for details\n");
+        ret = die("xwm-0.0.7, © 2020 Michael Czigler, see LICENSE for details\n");
     }
     if ((ret == 0) && (argc != 1)) {
         ret = die("usage: xwm [-v]\n");
