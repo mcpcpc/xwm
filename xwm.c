@@ -9,7 +9,6 @@ static xcb_connection_t * dpy;
 static xcb_screen_t     * scre;
 static xcb_drawable_t     win;
 static xcb_drawable_t     winprev;
-static xcb_drawable_t     root;
 static uint32_t           values[3];
 
 static void killclient(char **com) {
@@ -25,7 +24,7 @@ static void closewm(char **com) {
 static void spawn(char **com) {
     if (fork() == 0) {
         if (dpy != NULL) {
-            close(root);
+            close(scre->root);
         }
         setsid();
         execvp((char*)com[0], (char**)com);
@@ -47,13 +46,13 @@ static void handleButtonPress(xcb_generic_event_t * ev) {
         xcb_warp_pointer(dpy, XCB_NONE, win, 0, 0, 0, 0, geom->width, geom->height);
     }
     else {}
-    xcb_grab_pointer(dpy, 0, root, XCB_EVENT_MASK_BUTTON_RELEASE
+    xcb_grab_pointer(dpy, 0, scre->root, XCB_EVENT_MASK_BUTTON_RELEASE
         | XCB_EVENT_MASK_BUTTON_MOTION | XCB_EVENT_MASK_POINTER_MOTION_HINT,
-        XCB_GRAB_MODE_ASYNC, XCB_GRAB_MODE_ASYNC, root, XCB_NONE, XCB_CURRENT_TIME);
+        XCB_GRAB_MODE_ASYNC, XCB_GRAB_MODE_ASYNC, scre->root, XCB_NONE, XCB_CURRENT_TIME);
 }
 
 static void handleMotionNotify(xcb_generic_event_t * ev) {
-    xcb_query_pointer_cookie_t coord = xcb_query_pointer(dpy, root);
+    xcb_query_pointer_cookie_t coord = xcb_query_pointer(dpy, scre->root);
     xcb_query_pointer_reply_t * poin = xcb_query_pointer_reply(dpy, coord, 0);
     uint32_t val[2] = {1, 3};
     if ((values[2] == val[0]) && (win != 0)) {
@@ -99,7 +98,7 @@ static xcb_keysym_t xcb_get_keysym(xcb_keycode_t keycode) {
 }
 
 static void setFocus(xcb_drawable_t window) {
-    if ((window != 0) && (window != root)) {
+    if ((window != 0) && (window != scre->root)) {
         xcb_set_input_focus(dpy, XCB_INPUT_FOCUS_POINTER_ROOT, window,
             XCB_CURRENT_TIME);
     }
@@ -203,17 +202,17 @@ static void subscribeToEvents(void) {
         | XCB_EVENT_MASK_STRUCTURE_NOTIFY
         | XCB_EVENT_MASK_SUBSTRUCTURE_NOTIFY
         | XCB_EVENT_MASK_PROPERTY_CHANGE;
-    xcb_change_window_attributes_checked(dpy, root,
+    xcb_change_window_attributes_checked(dpy, scre->root,
         XCB_CW_EVENT_MASK, values);
 }
 
 static void grabKeys(void) {
-    xcb_ungrab_key(dpy, XCB_GRAB_ANY, root, XCB_MOD_MASK_ANY);
+    xcb_ungrab_key(dpy, XCB_GRAB_ANY, scre->root, XCB_MOD_MASK_ANY);
     int key_table_size = sizeof(keys) / sizeof(*keys);
     for (int i = 0; i < key_table_size; ++i) {
         xcb_keycode_t * keycode = xcb_get_keycodes(keys[i].keysym);
         if (keycode != NULL) {
-            xcb_grab_key(dpy, 1, root, keys[i].mod, *keycode,
+            xcb_grab_key(dpy, 1, scre->root, keys[i].mod, *keycode,
                 XCB_GRAB_MODE_ASYNC, XCB_GRAB_MODE_ASYNC );
         }
     }
@@ -221,12 +220,12 @@ static void grabKeys(void) {
 }
 
 static void grabButtons(void) {
-    xcb_grab_button(dpy, 0, root, XCB_EVENT_MASK_BUTTON_PRESS |
+    xcb_grab_button(dpy, 0, scre->root, XCB_EVENT_MASK_BUTTON_PRESS |
         XCB_EVENT_MASK_BUTTON_RELEASE, XCB_GRAB_MODE_ASYNC,
-        XCB_GRAB_MODE_ASYNC, root, XCB_NONE, 1, MOD1);
-    xcb_grab_button(dpy, 0, root, XCB_EVENT_MASK_BUTTON_PRESS |
+        XCB_GRAB_MODE_ASYNC, scre->root, XCB_NONE, 1, MOD1);
+    xcb_grab_button(dpy, 0, scre->root, XCB_EVENT_MASK_BUTTON_PRESS |
         XCB_EVENT_MASK_BUTTON_RELEASE, XCB_GRAB_MODE_ASYNC,
-        XCB_GRAB_MODE_ASYNC, root, XCB_NONE, 3, MOD1);
+        XCB_GRAB_MODE_ASYNC, scre->root, XCB_NONE, 3, MOD1);
     xcb_flush(dpy);
 }
 
@@ -268,7 +267,6 @@ int main(int argc, char * argv[]) {
     }
     if (ret == 0) {
         scre = xcb_setup_roots_iterator(xcb_get_setup(dpy)).data;
-        root = scre->root;
         subscribeToEvents();
         grabKeys();
         grabButtons();
