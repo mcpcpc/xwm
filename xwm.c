@@ -51,33 +51,41 @@ static void handleButtonPress(xcb_generic_event_t * ev) {
         XCB_GRAB_MODE_ASYNC, XCB_GRAB_MODE_ASYNC, scre->root, XCB_NONE, XCB_CURRENT_TIME);
 }
 
+static void moveWindow(xcb_query_pointer_reply_t * poin) {
+    xcb_get_geometry_cookie_t geom_now = xcb_get_geometry(dpy, win);
+    xcb_get_geometry_reply_t * geom = xcb_get_geometry_reply(dpy, geom_now, NULL);
+    values[0] = ((poin->root_x + geom->width) > scre->width_in_pixels) ?
+        (scre->width_in_pixels - geom->width) : poin->root_x;
+    values[1] = ((poin->root_y + geom->height) > scre->height_in_pixels) ?
+        (scre->height_in_pixels - geom->height) : poin->root_y;
+    xcb_configure_window(dpy, win, XCB_CONFIG_WINDOW_X
+        | XCB_CONFIG_WINDOW_Y, values);
+}
+
+static void resizeWindow(xcb_query_pointer_reply_t * poin) {
+    xcb_get_geometry_cookie_t geom_now = xcb_get_geometry(dpy, win);
+    xcb_get_geometry_reply_t* geom = xcb_get_geometry_reply(dpy, geom_now, NULL);
+    if (!((poin->root_x <= geom->x) || (poin->root_y <= geom->y))) {
+        values[0] = poin->root_x - geom->x;
+        values[1] = poin->root_y - geom->y;
+        uint32_t min_x = WINDOW_MIN_WIDTH;
+        uint32_t min_y = WINDOW_MIN_HEIGHT;
+        if ((values[0] >= min_x) && (values[1] >= min_y)) {
+            xcb_configure_window(dpy, win, XCB_CONFIG_WINDOW_WIDTH
+                | XCB_CONFIG_WINDOW_HEIGHT, values);
+        }
+    }
+}
+
 static void handleMotionNotify(xcb_generic_event_t * ev) {
     xcb_query_pointer_cookie_t coord = xcb_query_pointer(dpy, scre->root);
     xcb_query_pointer_reply_t * poin = xcb_query_pointer_reply(dpy, coord, 0);
     uint32_t val[2] = {1, 3};
     if ((values[2] == val[0]) && (win != 0)) {
-        xcb_get_geometry_cookie_t geom_now = xcb_get_geometry(dpy, win);
-        xcb_get_geometry_reply_t * geom = xcb_get_geometry_reply(dpy, geom_now, NULL);
-        values[0] = ((poin->root_x + geom->width) > scre->width_in_pixels) ?
-            (scre->width_in_pixels - geom->width) : poin->root_x;
-        values[1] = ((poin->root_y + geom->height) > scre->height_in_pixels) ?
-            (scre->height_in_pixels - geom->height) : poin->root_y;
-        xcb_configure_window(dpy, win, XCB_CONFIG_WINDOW_X
-            | XCB_CONFIG_WINDOW_Y, values);
+        moveWindow(poin);
     }
     if ((values[2] == val[1]) && (win != 0)) {
-        xcb_get_geometry_cookie_t geom_now = xcb_get_geometry(dpy, win);
-        xcb_get_geometry_reply_t* geom = xcb_get_geometry_reply(dpy, geom_now, NULL);
-        if (!((poin->root_x <= geom->x) || (poin->root_y <= geom->y))) {
-            values[0] = poin->root_x - geom->x;
-            values[1] = poin->root_y - geom->y;
-            uint32_t min_x = WINDOW_MIN_WIDTH;
-            uint32_t min_y = WINDOW_MIN_HEIGHT;
-            if ((values[0] >= min_x) && (values[1] >= min_y)) {
-                xcb_configure_window(dpy, win, XCB_CONFIG_WINDOW_WIDTH
-                    | XCB_CONFIG_WINDOW_HEIGHT, values);
-            }
-        }
+        resizeWindow(poin);
     }
 }
 

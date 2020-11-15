@@ -27,6 +27,8 @@ static void setFocus(xcb_drawable_t window);
 static void setWindowDimensions(xcb_drawable_t window);
 static void setBorderWidth(xcb_drawable_t window);
 static void setBorderColor(xcb_drawable_t window, int focus);
+static void moveWindow(xcb_query_pointer_reply_t * poin);
+static void resizeWindow(xcb_query_pointer_reply_t * poin);
 
 /* event hander actions */
 static int eventHandler(void);
