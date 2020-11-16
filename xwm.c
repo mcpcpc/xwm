@@ -106,13 +106,12 @@ static xcb_keysym_t xcb_get_keysym(xcb_keycode_t keycode) {
 }
 
 static void setFocus(xcb_drawable_t window) {
+    setBorderColor(winprev, 0);
     if ((window != 0) && (window != scre->root)) {
         xcb_set_input_focus(dpy, XCB_INPUT_FOCUS_POINTER_ROOT, window,
             XCB_CURRENT_TIME);
-    }
-    setBorderColor(window, 1);
-    if (winprev != window) {
-        setBorderColor(winprev, 0);
+        setBorderColor(window, 1);
+		winprev = window;
     }
 }
 
