@@ -46,3 +46,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.0.7] - 2020-11-13
 ### Fixed
 - Border focus/unfocus when leaving a window.
+
+## [0.0.8] - 2020-11-16
+### Fixed
+- Window focus/unfocus on new window creation.
+
+### Removed
+- Global root variable.
+- Removed leave notify event.
