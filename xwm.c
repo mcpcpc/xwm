@@ -8,7 +8,6 @@
 static xcb_connection_t * dpy;
 static xcb_screen_t     * scre;
 static xcb_drawable_t     win;
-static xcb_drawable_t     winprev;
 static uint32_t           values[3];
 
 static void killclient(char **com) {
@@ -106,12 +105,9 @@ static xcb_keysym_t xcb_get_keysym(xcb_keycode_t keycode) {
 }
 
 static void setFocus(xcb_drawable_t window) {
-    setBorderColor(winprev, 0);
     if ((window != 0) && (window != scre->root)) {
         xcb_set_input_focus(dpy, XCB_INPUT_FOCUS_POINTER_ROOT, window,
             XCB_CURRENT_TIME);
-        setBorderColor(window, 1);
-		winprev = window;
     }
 }
 
@@ -163,7 +159,6 @@ static void handleEnterNotify(xcb_generic_event_t * ev) {
 
 static void handleLeaveNotify(xcb_generic_event_t * ev) {
     xcb_leave_notify_event_t * e = ( xcb_leave_notify_event_t *) ev;
-    winprev = e->event;
 }
 
 static void handleButtonRelease(xcb_generic_event_t * ev) {
@@ -179,12 +174,24 @@ static void handleDestroyNotify(xcb_generic_event_t * ev) {
     xcb_kill_client(dpy, e->window);
 }
 
+static void handleFocusIn(xcb_generic_event_t * ev) {
+    xcb_focus_in_event_t * e = (xcb_focus_in_event_t *) ev;
+	setBorderColor(e->event, 1);
+}
+
+static void handleFocusOut(xcb_generic_event_t * ev) {
+    xcb_focus_out_event_t * e = (xcb_focus_out_event_t *) ev;
+	setBorderColor(e->event, 0);
+}
+
 static void handleMapRequest(xcb_generic_event_t * ev) {
     xcb_map_request_event_t * e = (xcb_map_request_event_t *) ev;
     xcb_map_window(dpy, e->window);
     setWindowDimensions(e->window);
     setBorderWidth(e->window);
-    values[0] = XCB_EVENT_MASK_ENTER_WINDOW | XCB_EVENT_MASK_LEAVE_WINDOW;
+    values[0] = XCB_EVENT_MASK_ENTER_WINDOW
+	    | XCB_EVENT_MASK_FOCUS_CHANGE
+	    | XCB_EVENT_MASK_LEAVE_WINDOW;
     xcb_change_window_attributes_checked(dpy, e->window,
         XCB_CW_EVENT_MASK, values);
     setFocus(e->window);
