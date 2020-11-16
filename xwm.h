@@ -34,7 +34,6 @@ static void resizeWindow(xcb_query_pointer_reply_t * poin);
 static int eventHandler(void);
 static void handleMotionNotify(xcb_generic_event_t * ev);
 static void handleEnterNotify(xcb_generic_event_t * ev);
-static void handleLeaveNotify(xcb_generic_event_t * ev);
 static void handleDestroyNotify(xcb_generic_event_t * ev);
 static void handleButtonPress(xcb_generic_event_t * ev);
 static void handleButtonRelease(xcb_generic_event_t * ev);
@@ -46,7 +45,6 @@ static void handleFocusOut(xcb_generic_event_t * ev);
 static handler_func_t handler_funs[] = {
     { XCB_MOTION_NOTIFY,  handleMotionNotify },
     { XCB_ENTER_NOTIFY,   handleEnterNotify },
-    { XCB_LEAVE_NOTIFY,   handleLeaveNotify },
     { XCB_DESTROY_NOTIFY, handleDestroyNotify },
     { XCB_BUTTON_PRESS,   handleButtonPress },
     { XCB_BUTTON_RELEASE, handleButtonRelease },

@@ -157,10 +157,6 @@ static void handleEnterNotify(xcb_generic_event_t * ev) {
     setFocus(e->event);
 }
 
-static void handleLeaveNotify(xcb_generic_event_t * ev) {
-    xcb_leave_notify_event_t * e = ( xcb_leave_notify_event_t *) ev;
-}
-
 static void handleButtonRelease(xcb_generic_event_t * ev) {
     xcb_ungrab_pointer(dpy, XCB_CURRENT_TIME);
 }
@@ -176,12 +172,12 @@ static void handleDestroyNotify(xcb_generic_event_t * ev) {
 
 static void handleFocusIn(xcb_generic_event_t * ev) {
     xcb_focus_in_event_t * e = (xcb_focus_in_event_t *) ev;
-	setBorderColor(e->event, 1);
+    setBorderColor(e->event, 1);
 }
 
 static void handleFocusOut(xcb_generic_event_t * ev) {
     xcb_focus_out_event_t * e = (xcb_focus_out_event_t *) ev;
-	setBorderColor(e->event, 0);
+    setBorderColor(e->event, 0);
 }
 
 static void handleMapRequest(xcb_generic_event_t * ev) {
@@ -189,9 +185,7 @@ static void handleMapRequest(xcb_generic_event_t * ev) {
     xcb_map_window(dpy, e->window);
     setWindowDimensions(e->window);
     setBorderWidth(e->window);
-    values[0] = XCB_EVENT_MASK_ENTER_WINDOW
-	    | XCB_EVENT_MASK_FOCUS_CHANGE
-	    | XCB_EVENT_MASK_LEAVE_WINDOW;
+    values[0] = XCB_EVENT_MASK_ENTER_WINDOW | XCB_EVENT_MASK_FOCUS_CHANGE;
     xcb_change_window_attributes_checked(dpy, e->window,
         XCB_CW_EVENT_MASK, values);
     setFocus(e->window);
@@ -201,7 +195,7 @@ static int eventHandler(void) {
     int ret = xcb_connection_has_error(dpy);
     if (ret == 0) {
         xcb_generic_event_t * ev = xcb_wait_for_event(dpy);
-		handler_func_t * handler;
+        handler_func_t * handler;
         for (handler = handler_funs; handler->func != NULL; handler++) {
             if ((ev->response_type & ~0x80) == handler->request) {
                 handler->func(ev);
