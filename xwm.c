@@ -195,7 +195,8 @@ static int eventHandler(void) {
     int ret = xcb_connection_has_error(dpy);
     if (ret == 0) {
         xcb_generic_event_t * ev = xcb_wait_for_event(dpy);
-        for (handler_func_t * handler = handler_funs; handler->func != NULL; handler++) {
+		handler_func_t * handler;
+        for (handler = handler_funs; handler->func != NULL; handler++) {
             if ((ev->response_type & ~0x80) == handler->request) {
                 handler->func(ev);
             }
@@ -261,7 +262,7 @@ static int strcmp_c(char * str1, char * str2) {
 int main(int argc, char * argv[]) {
     int ret = 0;
     if ((argc == 2) && (strcmp_c("-v", argv[1]) == 0)) {
-        ret = die("xwm-0.0.7, © 2020 Michael Czigler, see LICENSE for details\n");
+        ret = die("xwm-0.0.8, © 2020 Michael Czigler, see LICENSE for details\n");
     }
     if ((ret == 0) && (argc != 1)) {
         ret = die("usage: xwm [-v]\n");
