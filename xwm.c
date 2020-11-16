@@ -9,8 +9,6 @@ static xcb_connection_t * dpy;
 static xcb_screen_t     * scre;
 static xcb_drawable_t     win;
 static uint32_t           values[3];
-static uint32_t           min_x = WINDOW_MIN_WIDTH;
-static uint32_t           min_y = WINDOW_MIN_HEIGHT;
 
 static void killclient(char **com) {
     xcb_kill_client(dpy, win);
@@ -52,14 +50,6 @@ static void handleButtonPress(xcb_generic_event_t * ev) {
         XCB_GRAB_MODE_ASYNC, XCB_GRAB_MODE_ASYNC, scre->root, XCB_NONE, XCB_CURRENT_TIME);
 }
 
-static void moveWindow(xcb_query_pointer_reply_t * poin) {
-
-}
-
-static void resizeWindow(xcb_query_pointer_reply_t * poin) {
-
-}
-
 static void handleMotionNotify(xcb_generic_event_t * ev) {
     xcb_query_pointer_cookie_t coord = xcb_query_pointer(dpy, scre->root);
     xcb_query_pointer_reply_t * poin = xcb_query_pointer_reply(dpy, coord, 0);
@@ -73,19 +63,18 @@ static void handleMotionNotify(xcb_generic_event_t * ev) {
             (scre->height_in_pixels - geom->height) : poin->root_y;
         xcb_configure_window(dpy, win, XCB_CONFIG_WINDOW_X
             | XCB_CONFIG_WINDOW_Y, values);
-    }
-    if ((values[2] == val[1]) && (win != 0)) {
+    } else if ((values[2] == val[1]) && (win != 0)) {
         xcb_get_geometry_cookie_t geom_now = xcb_get_geometry(dpy, win);
         xcb_get_geometry_reply_t* geom = xcb_get_geometry_reply(dpy, geom_now, NULL);
         if (!((poin->root_x <= geom->x) || (poin->root_y <= geom->y))) {
             values[0] = poin->root_x - geom->x;
             values[1] = poin->root_y - geom->y;
-            if ((values[0] >= min_x) && (values[1] >= min_y)) {
+            if ((values[0] >= WINDOW_MIN_X) && (values[1] >= WINDOW_MIN_Y)) {
                 xcb_configure_window(dpy, win, XCB_CONFIG_WINDOW_WIDTH
                     | XCB_CONFIG_WINDOW_HEIGHT, values);
             }
         }
-    }
+    } else {}
 }
 
 static xcb_keycode_t * xcb_get_keycodes(xcb_keysym_t keysym) {
@@ -132,8 +121,8 @@ static void setBorderWidth(xcb_window_t window) {
 static void setWindowDimensions(xcb_window_t window) {
     if ((scre->root != window) && (0 != window)) {
         uint32_t vals[2];
-        vals[0] = WINDOW_WIDTH;
-        vals[1] = WINDOW_HEIGHT;
+        vals[0] = WINDOW_X;
+        vals[1] = WINDOW_Y;
         xcb_configure_window(dpy, window, XCB_CONFIG_WINDOW_WIDTH |
             XCB_CONFIG_WINDOW_HEIGHT, vals);
         xcb_flush(dpy);
