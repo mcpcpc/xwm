@@ -57,9 +57,7 @@ static handler_func_t handler_funs[] = {
 };
 
 /* intialize */
-static void subscribeToEvents(void);
-static void grabKeys(void);
-static void grabButtons(void);
+static void setup(void);
 
 /* error handling & misc. */
 static int die(char * errstr);

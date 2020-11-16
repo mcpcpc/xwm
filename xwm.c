@@ -206,16 +206,15 @@ static int eventHandler(void) {
     return ret;
 }
 
-static void subscribeToEvents(void) {
+static void setup(void) {
+    /* subscribe to events */
     values[0] = XCB_EVENT_MASK_SUBSTRUCTURE_REDIRECT
         | XCB_EVENT_MASK_STRUCTURE_NOTIFY
         | XCB_EVENT_MASK_SUBSTRUCTURE_NOTIFY
         | XCB_EVENT_MASK_PROPERTY_CHANGE;
     xcb_change_window_attributes_checked(dpy, scre->root,
         XCB_CW_EVENT_MASK, values);
-}
-
-static void grabKeys(void) {
+    /* grab keys */
     xcb_ungrab_key(dpy, XCB_GRAB_ANY, scre->root, XCB_MOD_MASK_ANY);
     int key_table_size = sizeof(keys) / sizeof(*keys);
     for (int i = 0; i < key_table_size; ++i) {
@@ -226,9 +225,7 @@ static void grabKeys(void) {
         }
     }
     xcb_flush(dpy);
-}
-
-static void grabButtons(void) {
+    /* grab buttons */
     xcb_grab_button(dpy, 0, scre->root, XCB_EVENT_MASK_BUTTON_PRESS |
         XCB_EVENT_MASK_BUTTON_RELEASE, XCB_GRAB_MODE_ASYNC,
         XCB_GRAB_MODE_ASYNC, scre->root, XCB_NONE, 1, MOD1);
@@ -276,9 +273,7 @@ int main(int argc, char * argv[]) {
     }
     if (ret == 0) {
         scre = xcb_setup_roots_iterator(xcb_get_setup(dpy)).data;
-        subscribeToEvents();
-        grabKeys();
-        grabButtons();
+        setup();
     }
     while (ret == 0) {
         ret = eventHandler();
