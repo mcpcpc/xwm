@@ -54,3 +54,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 - Global root variable.
 - Removed leave notify event.
+
+## [0.0.9] - 2020-11-17
+### Fixed
+- Window resize lag.
+- Bug where window border moves outside of root window.
