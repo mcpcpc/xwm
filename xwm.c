@@ -9,6 +9,8 @@ static xcb_connection_t * dpy;
 static xcb_screen_t     * scre;
 static xcb_drawable_t     win;
 static uint32_t           values[3];
+static uint32_t           min_x = WINDOW_MIN_X;
+static uint32_t           min_y = WINDOW_MIN_Y;
 
 static void killclient(char **com) {
     xcb_kill_client(dpy, win);
@@ -69,7 +71,7 @@ static void handleMotionNotify(xcb_generic_event_t * ev) {
         if (!((poin->root_x <= geom->x) || (poin->root_y <= geom->y))) {
             values[0] = poin->root_x - geom->x - BORDER_WIDTH;
             values[1] = poin->root_y - geom->y - BORDER_WIDTH;
-            if ((values[0] >= WINDOW_MIN_X) && (values[1] >= WINDOW_MIN_Y)) {
+            if ((values[0] >= min_x) && (values[1] >= min_y)) {
                 xcb_configure_window(dpy, win, XCB_CONFIG_WINDOW_WIDTH
                     | XCB_CONFIG_WINDOW_HEIGHT, values);
             }
