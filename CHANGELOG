@@ -59,3 +59,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Window resize lag.
 - Bug where window border moves outside of root window.
+
+## [0.1.0] - 2020-11-20
+### Fixed
+- MISRA 10.4 non-compliance.
+- Fix operator dependence.
