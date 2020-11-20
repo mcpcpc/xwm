@@ -9,6 +9,8 @@ static xcb_connection_t * dpy;
 static xcb_screen_t     * scre;
 static xcb_drawable_t     win;
 static uint32_t           values[3];
+static uint32_t           min_x = WINDOW_MIN_X;
+static uint32_t           min_y = WINDOW_MIN_Y;
 
 static void killclient(char **com) {
     xcb_kill_client(dpy, win);
@@ -57,10 +59,10 @@ static void handleMotionNotify(xcb_generic_event_t * ev) {
     if ((values[2] == val[0]) && (win != 0)) {
         xcb_get_geometry_cookie_t geom_now = xcb_get_geometry(dpy, win);
         xcb_get_geometry_reply_t * geom = xcb_get_geometry_reply(dpy, geom_now, NULL);
-        values[0] = ((poin->root_x + geom->width + 2*BORDER_WIDTH) > scre->width_in_pixels) ?
-            (scre->width_in_pixels - geom->width - 2*BORDER_WIDTH) : poin->root_x;
-        values[1] = ((poin->root_y + geom->height + 2*BORDER_WIDTH) > scre->height_in_pixels) ?
-            (scre->height_in_pixels - geom->height - 2*BORDER_WIDTH) : poin->root_y;
+        values[0] = ((poin->root_x + geom->width + (2 * BORDER_WIDTH)) > scre->width_in_pixels) ?
+            (scre->width_in_pixels - geom->width - (2 * BORDER_WIDTH)) : poin->root_x;
+        values[1] = ((poin->root_y + geom->height + (2 * BORDER_WIDTH)) > scre->height_in_pixels) ?
+            (scre->height_in_pixels - geom->height - (2 * BORDER_WIDTH)) : poin->root_y;
         xcb_configure_window(dpy, win, XCB_CONFIG_WINDOW_X
             | XCB_CONFIG_WINDOW_Y, values);
     } else if ((values[2] == val[1]) && (win != 0)) {
@@ -69,7 +71,7 @@ static void handleMotionNotify(xcb_generic_event_t * ev) {
         if (!((poin->root_x <= geom->x) || (poin->root_y <= geom->y))) {
             values[0] = poin->root_x - geom->x - BORDER_WIDTH;
             values[1] = poin->root_y - geom->y - BORDER_WIDTH;
-            if ((values[0] >= WINDOW_MIN_X) && (values[1] >= WINDOW_MIN_Y)) {
+            if ((values[0] >= min_x) && (values[1] >= min_y)) {
                 xcb_configure_window(dpy, win, XCB_CONFIG_WINDOW_WIDTH
                     | XCB_CONFIG_WINDOW_HEIGHT, values);
             }
@@ -248,7 +250,7 @@ static int strcmp_c(char * str1, char * str2) {
 int main(int argc, char * argv[]) {
     int ret = 0;
     if ((argc == 2) && (strcmp_c("-v", argv[1]) == 0)) {
-        ret = die("xwm-0.0.9, © 2020 Michael Czigler, see LICENSE for details\n");
+        ret = die("xwm-0.1.0, © 2020 Michael Czigler, see LICENSE for details\n");
     }
     if ((ret == 0) && (argc != 1)) {
         ret = die("usage: xwm [-v]\n");
