@@ -3,22 +3,24 @@ CC     = cc
 CFLAGS = -W -O
 PREFIX = /usr/local
 LDLIBS = -lm
-ALL_LDFLAGS = $(LDFLAGS) $(LIBS) -lxcb -lxcb-keysyms
+BINDIR = $(PREFIX)/bin
+MANDIR = $(PREFIX)/share/man
+LDFLAGS_REQUIRED = -lxcb -lxcb-keysyms
 
 all: xwm
 install: all
-	mkdir -p $(DESTDIR)$(PREFIX)/bin
-	mkdir -p $(DESTDIR)$(PREFIX)/share/man/man1
-	cp -f xwm $(DESTDIR)$(PREFIX)/bin
-	cp -f xwm.1 $(DESTDIR)$(PREFIX)/share/man/man1
-	chmod 755 $(DESTDIR)$(PREFIX)/bin/xwm
-	chmod 644 $(DESTDIR)$(PREFIX)/share/man/man1/xwm.1
+	mkdir -p $(DESTDIR)$(BINDIR)
+	mkdir -p $(DESTDIR)$(MANDIR)/man1
+	cp -f xwm $(DESTDIR)$(BINDIR)
+	cp -f xwm.1 $(DESTDIR)$(MANDIR)/man1
+	chmod 755 $(DESTDIR)$(BINDIR)/xwm
+	chmod 644 $(DESTDIR)$(MANDIR)/man1/xwm.1
 xwm: xwm.o
-	$(CC) $(ALL_LDFLAGS) -o xwm xwm.o $(LDLIBS)
+	$(CC) $(LDFLAGS_REQUIRED) $(LDFLAGS) -o xwm xwm.o $(LDLIBS)
 xwm.o: xwm.c xwm.h config.h
 clean:
 	rm -f xwm *.o
 uninstall:
-	rm -f $(DESTDIR)$(PREFIX)/bin/xwm
-	rm -f $(DESTDIR)$(PREFIX)/share/man/man1/xwm.1
+	rm -f $(DESTDIR)$(BINDIR)/xwm
+	rm -f $(DESTDIR)$(MANDIR)/man1/xwm.1
 .PHONY: all install uninstall clean
