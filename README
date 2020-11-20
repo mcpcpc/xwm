@@ -12,15 +12,14 @@ BUILD REQUIREMENTS
 
 libxcb, along with any default or user defined utilities:
 
-    application launcher   dmenu - https://git.suckless.org/dmenu
-    terminal emulator      st - https://git.suckless.org/st
-    internet browser       surf - https://git.suckless.org/surf
+    application launcher   https://git.suckless.org/dmenu
+    terminal emulator      https://git.suckless.org/st
+    internet browser       https://git.suckless.org/surf
 
 COMMANDS
 ========
 
-The following aliased commands have been implemented (although most
-of the default behaviors can be customized via the config.h file):
+Default keys and behavior can be customized via the config.h file:
 
     Win+Button1+[drag]     interactive window move
     Win+Button3+[drag]     interactive window resize
