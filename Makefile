@@ -1,4 +1,5 @@
 .POSIX:
+CC = c99
 ALL_WARNING = -Wall -Wextra
 ALL_LDFLAGS = -lxcb -lxcb-keysyms $(LDFLAGS)
 ALL_CFLAGS = $(ALL_WARNING) $(CPPFLAGS) $(CFLAGS)
@@ -17,9 +18,8 @@ install: all
 	chmod 644 $(DESTDIR)$(MANDIR)/man1/xwm.1
 xwm: xwm.o
 	$(CC) $(ALL_LDFLAGS) -o xwm xwm.o $(LDLIBS)
-.c.o:
-	$(CC) $(ALL_CFLAGS) -c $<
 xwm.o: xwm.c xwm.h config.h
+	$(CC) $(ALL_CFLAGS) -c xwm.c
 clean:
 	rm -f xwm *.o
 uninstall:
