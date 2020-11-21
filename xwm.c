@@ -5,6 +5,8 @@
 #include "xwm.h"
 #include "config.h"
 
+#define UNUSED(x) (void)(x)
+
 static xcb_connection_t * dpy;
 static xcb_screen_t     * scre;
 static xcb_drawable_t     win;
@@ -13,10 +15,12 @@ static uint32_t           min_x = WINDOW_MIN_X;
 static uint32_t           min_y = WINDOW_MIN_Y;
 
 static void killclient(char **com) {
+    UNUSED(com);
     xcb_kill_client(dpy, win);
 }
 
 static void closewm(char **com) {
+    UNUSED(com);
     if (dpy != NULL) {
         xcb_disconnect(dpy);
     }
@@ -53,6 +57,7 @@ static void handleButtonPress(xcb_generic_event_t * ev) {
 }
 
 static void handleMotionNotify(xcb_generic_event_t * ev) {
+    UNUSED(ev);
     xcb_query_pointer_cookie_t coord = xcb_query_pointer(dpy, scre->root);
     xcb_query_pointer_reply_t * poin = xcb_query_pointer_reply(dpy, coord, 0);
     uint32_t val[2] = {1, 3};
@@ -149,11 +154,8 @@ static void handleEnterNotify(xcb_generic_event_t * ev) {
 }
 
 static void handleButtonRelease(xcb_generic_event_t * ev) {
+    UNUSED(ev);
     xcb_ungrab_pointer(dpy, XCB_CURRENT_TIME);
-}
-
-static void handleKeyRelease(xcb_generic_event_t * ev) {
-    /* nothing to see here, carry on */
 }
 
 static void handleDestroyNotify(xcb_generic_event_t * ev) {

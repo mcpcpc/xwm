@@ -1,7 +1,7 @@
 .POSIX:
-ALL_WARN = -Wall -Wextra -pedantic -Wmissing-prototypes -Wstrict-prototypes
-ALL_CFLAGS = $(ALL_WARN) $(CPPFLAGS) $(CFLAGS)
+ALL_WARNING = -Wall -Wextra -pedantic -Wmissing-prototypes -Wstrict-prototypes
 ALL_LDFLAGS = -lxcb -lxcb-keysyms $(LDFLAGS)
+ALL_CFLAGS = $(ALL_WARNING) $(CPPFLAGS) $(CFLAGS)
 PREFIX = /usr/local
 LDLIBS = -lm
 BINDIR = $(PREFIX)/bin
