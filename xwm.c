@@ -5,6 +5,8 @@
 #include "xwm.h"
 #include "config.h"
 
+#define UNUSED(x) (void)(x)
+
 static xcb_connection_t * dpy;
 static xcb_screen_t     * scre;
 static xcb_drawable_t     win;
@@ -13,10 +15,12 @@ static uint32_t           min_x = WINDOW_MIN_X;
 static uint32_t           min_y = WINDOW_MIN_Y;
 
 static void killclient(char **com) {
+    UNUSED(com);
     xcb_kill_client(dpy, win);
 }
 
 static void closewm(char **com) {
+    UNUSED(com);
     if (dpy != NULL) {
         xcb_disconnect(dpy);
     }
@@ -53,6 +57,7 @@ static void handleButtonPress(xcb_generic_event_t * ev) {
 }
 
 static void handleMotionNotify(xcb_generic_event_t * ev) {
+    UNUSED(ev);
     xcb_query_pointer_cookie_t coord = xcb_query_pointer(dpy, scre->root);
     xcb_query_pointer_reply_t * poin = xcb_query_pointer_reply(dpy, coord, 0);
     uint32_t val[2] = {1, 3};
@@ -149,11 +154,8 @@ static void handleEnterNotify(xcb_generic_event_t * ev) {
 }
 
 static void handleButtonRelease(xcb_generic_event_t * ev) {
+    UNUSED(ev);
     xcb_ungrab_pointer(dpy, XCB_CURRENT_TIME);
-}
-
-static void handleKeyRelease(xcb_generic_event_t * ev) {
-    /* nothing to see here, carry on */
 }
 
 static void handleDestroyNotify(xcb_generic_event_t * ev) {
@@ -232,8 +234,12 @@ static int die(char * errstr) {
     while ((* (p++)) != 0) {
         ++n;
     }
-    write(STDERR_FILENO, errstr, n);
-    return 1;
+    ssize_t o = write(STDERR_FILENO, errstr, n);
+    int ret = 1;
+    if (o < 0) {
+        ret = -1;
+    }
+    return ret;
 }
 
 static int strcmp_c(char * str1, char * str2) {
@@ -250,7 +256,7 @@ static int strcmp_c(char * str1, char * str2) {
 int main(int argc, char * argv[]) {
     int ret = 0;
     if ((argc == 2) && (strcmp_c("-v", argv[1]) == 0)) {
-        ret = die("xwm-0.1.0, © 2020 Michael Czigler, see LICENSE for details\n");
+        ret = die("xwm-0.1.1, © 2020 Michael Czigler, see LICENSE for details\n");
     }
     if ((ret == 0) && (argc != 1)) {
         ret = die("usage: xwm [-v]\n");

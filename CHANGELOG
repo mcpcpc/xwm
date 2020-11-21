@@ -64,3 +64,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - MISRA 10.4 non-compliance.
 - Fix operator dependence.
+
+## [0.1.1] - 2020-11-21
+### Added
+- Makefile warnings (e.g. -Wall, Wextra, etc.).

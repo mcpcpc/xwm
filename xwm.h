@@ -36,7 +36,6 @@ static void handleDestroyNotify(xcb_generic_event_t * ev);
 static void handleButtonPress(xcb_generic_event_t * ev);
 static void handleButtonRelease(xcb_generic_event_t * ev);
 static void handleKeyPress(xcb_generic_event_t * ev);
-static void handleKeyRelease(xcb_generic_event_t * ev);
 static void handleMapRequest(xcb_generic_event_t * ev);
 static void handleFocusIn(xcb_generic_event_t * ev);
 static void handleFocusOut(xcb_generic_event_t * ev);
@@ -47,7 +46,6 @@ static handler_func_t handler_funs[] = {
     { XCB_BUTTON_PRESS,   handleButtonPress },
     { XCB_BUTTON_RELEASE, handleButtonRelease },
     { XCB_KEY_PRESS,      handleKeyPress },
-    { XCB_KEY_RELEASE,    handleKeyRelease },
     { XCB_MAP_REQUEST,    handleMapRequest },
     { XCB_FOCUS_IN,       handleFocusIn },
     { XCB_FOCUS_OUT,      handleFocusOut },
