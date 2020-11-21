@@ -1,5 +1,5 @@
 .POSIX:
-ALL_WARNING = -Wall -Wextra -pedantic -Wmissing-prototypes -Wstrict-prototypes
+ALL_WARNING = -Wall -Wextra
 ALL_LDFLAGS = -lxcb -lxcb-keysyms $(LDFLAGS)
 ALL_CFLAGS = $(ALL_WARNING) $(CPPFLAGS) $(CFLAGS)
 PREFIX = /usr/local
