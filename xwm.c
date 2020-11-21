@@ -232,8 +232,12 @@ static int die(char * errstr) {
     while ((* (p++)) != 0) {
         ++n;
     }
-    write(STDERR_FILENO, errstr, n);
-    return 1;
+    ssize_t o = write(STDERR_FILENO, errstr, n);
+    int ret = 1;
+    if (o < 0) {
+        ret = -1;
+    }
+    return ret;
 }
 
 static int strcmp_c(char * str1, char * str2) {
