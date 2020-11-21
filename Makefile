@@ -1,11 +1,11 @@
 .POSIX:
-CC     = cc
-CFLAGS = -W -O
+ALL_WARN = -Wall -Wextra -pedantic -Wmissing-prototypes -Wstrict-prototypes
+ALL_CFLAGS = $(ALL_WARN) $(CPPFLAGS) $(CFLAGS)
+ALL_LDFLAGS = -lxcb -lxcb-keysyms $(LDFLAGS)
 PREFIX = /usr/local
 LDLIBS = -lm
 BINDIR = $(PREFIX)/bin
 MANDIR = $(PREFIX)/share/man
-LDFLAGS_REQUIRED = -lxcb -lxcb-keysyms
 
 all: xwm
 install: all
@@ -16,7 +16,9 @@ install: all
 	chmod 755 $(DESTDIR)$(BINDIR)/xwm
 	chmod 644 $(DESTDIR)$(MANDIR)/man1/xwm.1
 xwm: xwm.o
-	$(CC) $(LDFLAGS_REQUIRED) $(LDFLAGS) -o xwm xwm.o $(LDLIBS)
+	$(CC) $(ALL_LDFLAGS) -o xwm xwm.o $(LDLIBS)
+.c.o:
+	$(CC) $(ALL_CFLAGS) -c $<
 xwm.o: xwm.c xwm.h config.h
 clean:
 	rm -f xwm *.o
