@@ -1,8 +1,7 @@
 .POSIX:
-CC = c99
-ALL_WARNING = -Wall -Wextra
+ALL_WARNING = -Wall -Wextra -pedantic
 ALL_LDFLAGS = -lxcb -lxcb-keysyms $(LDFLAGS)
-ALL_CFLAGS = $(ALL_WARNING) $(CPPFLAGS) $(CFLAGS)
+ALL_CFLAGS = $(CPPFLAGS) $(CFLAGS) -std=c99 $(ALL_WARNING)
 PREFIX = /usr/local
 LDLIBS = -lm
 BINDIR = $(PREFIX)/bin
