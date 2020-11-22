@@ -39,7 +39,7 @@
 
 static char * termcmd[] = { "st", NULL };
 static char * menucmd[] = { "dmenu_run", NULL };
-static char * browcmd[] = { "surf", "http://www.google.com", NULL };
+static char * browcmd[] = { "surf", "https://startpage.com", NULL };
 
 /* KEY ALIASES
  * In general, one shortcut key should exist per alias. For more key
