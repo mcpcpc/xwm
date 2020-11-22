@@ -27,12 +27,15 @@ static void closewm(char **com) {
 }
 
 static void spawn(char **com) {
-    if (fork() == 0) {
+    pid_t pid = fork();
+    if (pid == 0) {
         if (dpy != NULL) {
             close(scre->root);
         }
         setsid();
         execvp((char*)com[0], (char**)com);
+    } else {
+        waitpid(pid, 0, 0);
     }
 }
 
