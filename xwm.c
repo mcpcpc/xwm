@@ -1,6 +1,5 @@
 /* See LICENSE file for license details. */
 #include <sys/wait.h>
-#include <signal.h>
 #include <unistd.h>
 #include <xcb/xcb.h>
 #include <xcb/xcb_keysyms.h>
@@ -16,12 +15,6 @@ static uint32_t           values[3];
 static uint32_t           min_x = WINDOW_MIN_X;
 static uint32_t           min_y = WINDOW_MIN_Y;
 
-static void sigChild(int sig) {
-    UNUSED(sig);
-	signal(SIGCHLD, sigChild);
-	while (0 < waitpid(-1, NULL, WNOHANG)) {}
-}
-
 static void killclient(char **com) {
     UNUSED(com);
     xcb_kill_client(dpy, win);
@@ -35,15 +28,18 @@ static void closewm(char **com) {
 }
 
 static void spawn(char **com) {
-    pid_t pid = fork();
-    if (pid == 0) {
+    pid_t pid1 = fork();
+	if (pid1 == 0) {
         if (dpy != NULL) {
             close(scre->root);
         }
-        setsid();
-        execvp((char*)com[0], (char**)com);
+        pid_t pid2 = fork();
+		if (pid2 == 0) {
+		    execvp((char*)com[0], (char**)com);
+		}
 		_exit(0);
     }
+	wait(NULL);
 }
 
 static void handleButtonPress(xcb_generic_event_t * ev) {
@@ -272,7 +268,6 @@ int main(int argc, char * argv[]) {
         ret = die("usage: xwm [-v]\n");
     }
     if (ret == 0) {
-	    sigChild(0);
         dpy = xcb_connect(NULL, NULL);
         ret = xcb_connection_has_error(dpy);
         if (ret > 0) {
