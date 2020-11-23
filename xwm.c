@@ -1,5 +1,6 @@
 /* See LICENSE file for license details. */
 #include <sys/wait.h>
+#include <signal.h>
 #include <unistd.h>
 #include <xcb/xcb.h>
 #include <xcb/xcb_keysyms.h>
@@ -14,6 +15,12 @@ static xcb_drawable_t     win;
 static uint32_t           values[3];
 static uint32_t           min_x = WINDOW_MIN_X;
 static uint32_t           min_y = WINDOW_MIN_Y;
+
+static void sigChild(int sig) {
+    UNUSED(sig);
+	signal(SIGCHLD, sigChild);
+	while (0 < waitpid(-1, NULL, WNOHANG)) {}
+}
 
 static void killclient(char **com) {
     UNUSED(com);
@@ -35,8 +42,7 @@ static void spawn(char **com) {
         }
         setsid();
         execvp((char*)com[0], (char**)com);
-    } else {
-        waitpid(pid, 0, 0);
+		_exit(0);
     }
 }
 
@@ -266,6 +272,7 @@ int main(int argc, char * argv[]) {
         ret = die("usage: xwm [-v]\n");
     }
     if (ret == 0) {
+	    sigChild(0);
         dpy = xcb_connect(NULL, NULL);
         ret = xcb_connection_has_error(dpy);
         if (ret > 0) {
