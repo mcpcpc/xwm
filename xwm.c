@@ -1,4 +1,5 @@
 /* See LICENSE file for license details. */
+#include <sys/wait.h>
 #include <unistd.h>
 #include <xcb/xcb.h>
 #include <xcb/xcb_keysyms.h>
