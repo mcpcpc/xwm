@@ -28,18 +28,19 @@ static void closewm(char **com) {
 }
 
 static void spawn(char **com) {
-    pid_t pid1 = fork();
-    if (pid1 == 0) {
+    if (fork() != 0) {
+        wait(NULL);
+    } else {
         if (dpy != NULL) {
             close(scre->root);
         }
-        pid_t pid2 = fork();
-        if (pid2 == 0) {
-            execvp((char*)com[0], (char**)com);
+        setsid();
+        if (fork() != 0) {
+            _exit(0);
         }
+        execvp((char*)com[0], (char**)com);
         _exit(0);
     }
-    wait(NULL);
 }
 
 static void handleButtonPress(xcb_generic_event_t * ev) {
