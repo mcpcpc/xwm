@@ -1,4 +1,5 @@
 /* See LICENSE file for license details. */
+#include <sys/wait.h>
 #include <unistd.h>
 #include <xcb/xcb.h>
 #include <xcb/xcb_keysyms.h>
@@ -32,8 +33,13 @@ static void spawn(char **com) {
             close(scre->root);
         }
         setsid();
+        if (fork() != 0) {
+            _exit(0);
+        }
         execvp((char*)com[0], (char**)com);
+        _exit(0);
     }
+    wait(NULL);
 }
 
 static void handleButtonPress(xcb_generic_event_t * ev) {
@@ -256,7 +262,7 @@ static int strcmp_c(char * str1, char * str2) {
 int main(int argc, char * argv[]) {
     int ret = 0;
     if ((argc == 2) && (strcmp_c("-v", argv[1]) == 0)) {
-        ret = die("xwm-0.1.1, © 2020 Michael Czigler, see LICENSE for details\n");
+        ret = die("xwm-0.1.2, © 2020 Michael Czigler, see LICENSE for details\n");
     }
     if ((ret == 0) && (argc != 1)) {
         ret = die("usage: xwm [-v]\n");
