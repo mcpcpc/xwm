@@ -28,9 +28,7 @@ static void closewm(char **com) {
 }
 
 static void spawn(char **com) {
-    if (fork() != 0) {
-        wait(NULL);
-    } else {
+    if (fork() == 0) {
         if (dpy != NULL) {
             close(scre->root);
         }
@@ -41,6 +39,7 @@ static void spawn(char **com) {
         execvp((char*)com[0], (char**)com);
         _exit(0);
     }
+    wait(NULL);
 }
 
 static void handleButtonPress(xcb_generic_event_t * ev) {
