@@ -50,13 +50,9 @@ Build and install from Arch Linux AUR:
 PATCHES
 =======
 
-xwm is considered a minimally viable window manager solution and,
-therefore, is missing several features that many users would 
-consider "essential". For additional features, I have provided
-instructions below for patching, as well as a respository for 
-sharing and hosting user created patches:
+For additional features, I have provided a respository for sharing
+and hosting user created patches:
     http://github.com/mcpcpc/xwm-patches
-
 
 EXAMPLES
 ========
@@ -71,7 +67,7 @@ Usimg startx to run xwm:
 Using imagemagick to set a wallpaper:
     display -window root background.png
 
-Patching xwm (after copying the *.patch into the source dir.):
+Patching xwm:
     patch -p0 < mypatch.patch
 
 DISCLAIMER
