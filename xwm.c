@@ -12,8 +12,6 @@ static xcb_connection_t * dpy;
 static xcb_screen_t     * scre;
 static xcb_drawable_t     win;
 static uint32_t           values[3];
-static uint32_t           min_x = WINDOW_MIN_X;
-static uint32_t           min_y = WINDOW_MIN_Y;
 
 static void killclient(char **com) {
 	UNUSED(com);
@@ -82,7 +80,7 @@ static void handleMotionNotify(xcb_generic_event_t * ev) {
 		if (!((poin->root_x <= geom->x) || (poin->root_y <= geom->y))) {
 			values[0] = poin->root_x - geom->x - BORDER_WIDTH;
 			values[1] = poin->root_y - geom->y - BORDER_WIDTH;
-			if ((values[0] >= min_x) && (values[1] >= min_y)) {
+			if ((values[0] >= WINDOW_MIN_X) && (values[1] >= WINDOW_MIN_Y)) {
 				xcb_configure_window(dpy, win, XCB_CONFIG_WINDOW_WIDTH
 					| XCB_CONFIG_WINDOW_HEIGHT, values);
 			}
@@ -122,31 +120,35 @@ static void setBorderColor(xcb_window_t window, int focus) {
 	}
 }
 
-static void setBorderWidth(xcb_window_t window) {
-	if (BORDER_WIDTH > 0) {
+static void setBorderWidth(xcb_window_t window, uint32_t width) {
+	if ((width > 0) && (scre->root != window) && (0 != window)) {
 		uint32_t vals[2];
-		vals[0] = BORDER_WIDTH;
+		vals[0] = width;
 		xcb_configure_window(dpy, window, XCB_CONFIG_WINDOW_BORDER_WIDTH, vals);
 		xcb_flush(dpy);
 	}
 }
 
-static void setWindowDimensions(xcb_window_t window) {
-	uint32_t vals[2];
-	vals[0] = WINDOW_X;
-	vals[1] = WINDOW_Y;
-	xcb_configure_window(dpy, window, XCB_CONFIG_WINDOW_WIDTH |
-		XCB_CONFIG_WINDOW_HEIGHT, vals);
-	xcb_flush(dpy);
+static void setWindowDimensions(xcb_window_t window, uint32_t x, uint32_t y) {
+	if ((scre->root != window) && (0 != window)) {
+		uint32_t vals[2];
+		vals[0] = x;
+		vals[1] = y;
+		xcb_configure_window(dpy, window, XCB_CONFIG_WINDOW_WIDTH |
+			XCB_CONFIG_WINDOW_HEIGHT, vals);
+		xcb_flush(dpy);
+	}
 }
 
-static void setWindowPosition(xcb_window_t window) {
-	uint32_t vals[2];
-	vals[0] = (scre->width_in_pixels / 2) - (WINDOW_X / 2);
-	vals[1] = (scre->height_in_pixels / 2) - (WINDOW_Y / 2);
-	xcb_configure_window(dpy, window, XCB_CONFIG_WINDOW_X |
-		XCB_CONFIG_WINDOW_Y, vals);
-	xcb_flush(dpy);
+static void setWindowPosition(xcb_window_t window, uint32_t x, uint32_t y) {
+	if ((scre->root != window) && (0 != window)) {
+		uint32_t vals[2];
+		vals[0] = (scre->width_in_pixels / 2) - (x / 2);
+		vals[1] = (scre->height_in_pixels / 2) - (y / 2);
+		xcb_configure_window(dpy, window, XCB_CONFIG_WINDOW_X |
+			XCB_CONFIG_WINDOW_Y, vals);
+		xcb_flush(dpy);
+	}
 }
 
 static void handleKeyPress(xcb_generic_event_t * ev) {
@@ -189,11 +191,9 @@ static void handleFocusOut(xcb_generic_event_t * ev) {
 static void handleMapRequest(xcb_generic_event_t * ev) {
 	xcb_map_request_event_t * e = (xcb_map_request_event_t *) ev;
 	xcb_map_window(dpy, e->window);
-	if ((scre->root != e->window) && (0 != e->window)) {
-		setWindowDimensions(e->window);
-		setBorderWidth(e->window);
-		setWindowPosition(e->window);
-	}
+	setWindowDimensions(e->window, WINDOW_X, WINDOW_Y);
+	setWindowPosition(e->window, WINDOW_X, WINDOW_Y);
+	setBorderWidth(e->window, BORDER_WIDTH);
 	values[0] = XCB_EVENT_MASK_ENTER_WINDOW | XCB_EVENT_MASK_FOCUS_CHANGE;
 	xcb_change_window_attributes_checked(dpy, e->window,
 		XCB_CW_EVENT_MASK, values);
