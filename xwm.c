@@ -120,31 +120,31 @@ static void setBorderColor(xcb_window_t window, int focus) {
 	}
 }
 
-static void setBorderWidth(xcb_window_t window, uint32_t width) {
-	if ((width > 0) && (scre->root != window) && (0 != window)) {
+static void setBorderWidth(xcb_window_t window) {
+	if ((BORDER_WIDTH > 0) && (scre->root != window) && (0 != window)) {
 		uint32_t vals[2];
-		vals[0] = width;
+		vals[0] = BORDER_WIDTH;
 		xcb_configure_window(dpy, window, XCB_CONFIG_WINDOW_BORDER_WIDTH, vals);
 		xcb_flush(dpy);
 	}
 }
 
-static void setWindowDimensions(xcb_window_t window, uint32_t x, uint32_t y) {
+static void setWindowDimensions(xcb_window_t window) {
 	if ((scre->root != window) && (0 != window)) {
 		uint32_t vals[2];
-		vals[0] = x;
-		vals[1] = y;
+		vals[0] = WINDOW_X;
+		vals[1] = WINDOW_Y;
 		xcb_configure_window(dpy, window, XCB_CONFIG_WINDOW_WIDTH |
 			XCB_CONFIG_WINDOW_HEIGHT, vals);
 		xcb_flush(dpy);
 	}
 }
 
-static void setWindowPosition(xcb_window_t window, uint32_t x, uint32_t y) {
+static void setWindowPosition(xcb_window_t window) {
 	if ((scre->root != window) && (0 != window)) {
 		uint32_t vals[2];
-		vals[0] = (scre->width_in_pixels / 2) - (x / 2);
-		vals[1] = (scre->height_in_pixels / 2) - (y / 2);
+		vals[0] = (scre->width_in_pixels / 2) - (WINDOW_X / 2);
+		vals[1] = (scre->height_in_pixels / 2) - (WINDOW_Y / 2);
 		xcb_configure_window(dpy, window, XCB_CONFIG_WINDOW_X |
 			XCB_CONFIG_WINDOW_Y, vals);
 		xcb_flush(dpy);
@@ -191,9 +191,9 @@ static void handleFocusOut(xcb_generic_event_t * ev) {
 static void handleMapRequest(xcb_generic_event_t * ev) {
 	xcb_map_request_event_t * e = (xcb_map_request_event_t *) ev;
 	xcb_map_window(dpy, e->window);
-	setWindowDimensions(e->window, WINDOW_X, WINDOW_Y);
-	setWindowPosition(e->window, WINDOW_X, WINDOW_Y);
-	setBorderWidth(e->window, BORDER_WIDTH);
+	setWindowDimensions(e->window);
+	setWindowPosition(e->window);
+	setBorderWidth(e->window);
 	values[0] = XCB_EVENT_MASK_ENTER_WINDOW | XCB_EVENT_MASK_FOCUS_CHANGE;
 	xcb_change_window_attributes_checked(dpy, e->window,
 		XCB_CW_EVENT_MASK, values);
