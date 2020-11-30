@@ -2,10 +2,10 @@
 
 /* typedefs */
 typedef struct {
-	unsigned int mod;
-	xcb_keysym_t keysym;
-	void (*func)(char **com);
-	char **com;
+    unsigned int mod;
+    xcb_keysym_t keysym;
+    void (*func)(char **com);
+    char **com;
 } Key;
 
 typedef struct {
@@ -41,16 +41,16 @@ static void handleMapRequest(xcb_generic_event_t * ev);
 static void handleFocusIn(xcb_generic_event_t * ev);
 static void handleFocusOut(xcb_generic_event_t * ev);
 static handler_func_t handler_funs[] = {
-	{ XCB_MOTION_NOTIFY,  handleMotionNotify },
-	{ XCB_ENTER_NOTIFY,   handleEnterNotify },
-	{ XCB_DESTROY_NOTIFY, handleDestroyNotify },
-	{ XCB_BUTTON_PRESS,   handleButtonPress },
-	{ XCB_BUTTON_RELEASE, handleButtonRelease },
-	{ XCB_KEY_PRESS,      handleKeyPress },
-	{ XCB_MAP_REQUEST,    handleMapRequest },
-	{ XCB_FOCUS_IN,       handleFocusIn },
-	{ XCB_FOCUS_OUT,      handleFocusOut },
-	{ XCB_NONE,           NULL }
+    { XCB_MOTION_NOTIFY,  handleMotionNotify },
+    { XCB_ENTER_NOTIFY,   handleEnterNotify },
+    { XCB_DESTROY_NOTIFY, handleDestroyNotify },
+    { XCB_BUTTON_PRESS,   handleButtonPress },
+    { XCB_BUTTON_RELEASE, handleButtonRelease },
+    { XCB_KEY_PRESS,      handleKeyPress },
+    { XCB_MAP_REQUEST,    handleMapRequest },
+    { XCB_FOCUS_IN,       handleFocusIn },
+    { XCB_FOCUS_OUT,      handleFocusOut },
+    { XCB_NONE,           NULL }
 };
 
 /* intialize */
