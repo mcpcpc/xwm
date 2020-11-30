@@ -46,7 +46,7 @@ static char * browcmd[] = { "surf", "https://startpage.com", NULL };
  * definitions, refer to the keysymdef.h and XF86keysym.h headers.
  */
 
-static Key    keys[] = {
+static Key keys[] = {
     { MOD1,      0x0062, spawn,      browcmd }, /* 0x0062 = XK_b */
     { MOD1,      0xff0d, spawn,      termcmd }, /* 0xff0d = XK_Enter */
     { MOD1,      0x0020, spawn,      menucmd }, /* 0x0020 = XK_space */

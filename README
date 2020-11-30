@@ -10,7 +10,7 @@ FEATURES
 BUILD REQUIREMENTS
 ==================
 
-libxcb, along with any default or user defined utilities:
+xcb-util-keysyms, along with any default or user defined utilities:
 
     application launcher   https://git.suckless.org/dmenu
     terminal emulator      https://git.suckless.org/st
@@ -42,16 +42,17 @@ Building and installing on KISS Linux:
     kiss b xwm
     kiss i xwm
 
+Build and install from Arch Linux AUR:
+    git clone https://aur.archlinux.org/xwm.git
+    cd kirc
+    makepkg -si
+
 PATCHES
 =======
 
-xwm is considered a minimally viable window manager solution and,
-therefore, is missing several features that many users would 
-consider "essential". For additional features, I have provided
-instructions below for patching, as well as a respository for 
-sharing and hosting user created patches:
+For additional features, I have provided a respository for sharing
+and hosting user created patches:
     http://github.com/mcpcpc/xwm-patches
-
 
 EXAMPLES
 ========
@@ -63,13 +64,10 @@ Usimg startx to run xwm:
     echo "exec xwm" > ~/.xinitrc
     startx
 
-Using xbg to set a solid background color:
-    xbg red
-
 Using imagemagick to set a wallpaper:
     display -window root background.png
 
-Patching xwm (after copying the *.patch into the source dir.):
+Patching xwm:
     patch -p0 < mypatch.patch
 
 DISCLAIMER

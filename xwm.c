@@ -142,6 +142,17 @@ static void setWindowDimensions(xcb_window_t window) {
     }
 }
 
+static void setWindowPosition(xcb_window_t window) {
+    if ((scre->root != window) && (0 != window)) {
+        uint32_t vals[2];
+        vals[0] = (scre->width_in_pixels / 2) - (WINDOW_X / 2);
+        vals[1] = (scre->height_in_pixels / 2) - (WINDOW_Y / 2);
+        xcb_configure_window(dpy, window, XCB_CONFIG_WINDOW_X |
+            XCB_CONFIG_WINDOW_Y, vals);
+        xcb_flush(dpy);
+    }
+}
+
 static void handleKeyPress(xcb_generic_event_t * ev) {
     xcb_key_press_event_t * e = ( xcb_key_press_event_t *) ev;
     xcb_keysym_t keysym = xcb_get_keysym(e->detail);
@@ -183,6 +194,7 @@ static void handleMapRequest(xcb_generic_event_t * ev) {
     xcb_map_request_event_t * e = (xcb_map_request_event_t *) ev;
     xcb_map_window(dpy, e->window);
     setWindowDimensions(e->window);
+    setWindowPosition(e->window);
     setBorderWidth(e->window);
     values[0] = XCB_EVENT_MASK_ENTER_WINDOW | XCB_EVENT_MASK_FOCUS_CHANGE;
     xcb_change_window_attributes_checked(dpy, e->window,
@@ -262,7 +274,7 @@ static int strcmp_c(char * str1, char * str2) {
 int main(int argc, char * argv[]) {
     int ret = 0;
     if ((argc == 2) && (strcmp_c("-v", argv[1]) == 0)) {
-        ret = die("xwm-0.1.2, © 2020 Michael Czigler, see LICENSE for details\n");
+        ret = die("xwm-0.1.3, © 2020 Michael Czigler, see LICENSE for details\n");
     }
     if ((ret == 0) && (argc != 1)) {
         ret = die("usage: xwm [-v]\n");
