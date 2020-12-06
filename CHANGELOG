@@ -83,3 +83,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Default new window location from top-left to center.
 
+## [0.1.4] - 2020-11-06
+### Fixed
+- Spelling and grammar in man page.
