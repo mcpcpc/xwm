@@ -7,8 +7,8 @@ FEATURES
 *   Extensible & configurable
 *   Focus follows mouse
 
-BUILD REQUIREMENTS
-==================
+REQUIREMENTS
+============
 
 xcb-util-keysyms, along with any default or user defined utilities:
     application launcher   https://git.suckless.org/dmenu
