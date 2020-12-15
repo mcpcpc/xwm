@@ -47,10 +47,9 @@ static char * browcmd[] = { "surf", "https://startpage.com", NULL };
  */
 
 static Key keys[] = {
-	{ MOD1,      0x0062, spawn,      browcmd }, /* 0x0062 = XK_b */
-	{ MOD1,      0xff0d, spawn,      termcmd }, /* 0xff0d = XK_Enter */
-	{ MOD1,      0x0020, spawn,      menucmd }, /* 0x0020 = XK_space */
-	{ MOD1,      0x0071, killclient, NULL },    /* 0x0071 = XK_q */
-	{ MOD1|MOD2, 0x0071, closewm,    NULL }     /* 0x0071 = XK_q */
+    { MOD1,      0x0062, spawn,      browcmd }, /* 0x0062 = XK_b */
+    { MOD1,      0xff0d, spawn,      termcmd }, /* 0xff0d = XK_Enter */
+    { MOD1,      0x0020, spawn,      menucmd }, /* 0x0020 = XK_space */
+    { MOD1,      0x0071, killclient, NULL },    /* 0x0071 = XK_q */
+    { MOD1|MOD2, 0x0071, closewm,    NULL }     /* 0x0071 = XK_q */
 };
-
