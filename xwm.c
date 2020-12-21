@@ -67,16 +67,26 @@ static void handleMotionNotify(xcb_generic_event_t * ev) {
     xcb_query_pointer_cookie_t coord = xcb_query_pointer(dpy, scre->root);
     xcb_query_pointer_reply_t * poin = xcb_query_pointer_reply(dpy, coord, 0);
     uint32_t val[2] = {1, 3};
-    if ((values[2] == val[0]) && (win != 0)) {
+    if ((values[2] == val[0]) && (win != 0)) { /* move window */
         xcb_get_geometry_cookie_t geom_now = xcb_get_geometry(dpy, win);
         xcb_get_geometry_reply_t * geom = xcb_get_geometry_reply(dpy, geom_now, NULL);
-        values[0] = ((poin->root_x + geom->width + (2 * BORDER_WIDTH)) > scre->width_in_pixels) ?
-            (scre->width_in_pixels - geom->width - (2 * BORDER_WIDTH)) : poin->root_x;
-        values[1] = ((poin->root_y + geom->height + (2 * BORDER_WIDTH)) > scre->height_in_pixels) ?
-            (scre->height_in_pixels - geom->height - (2 * BORDER_WIDTH)) : poin->root_y;
+        if (poin->root_x < PADDING_LEFT) {
+            values[0] = PADDING_LEFT;
+        } else if (poin->root_x + PADDING_RIGHT + geom->width + (2 * BORDER_WIDTH) > scre->width_in_pixels) {
+            values[0] = scre->width_in_pixels - PADDING_RIGHT - geom->width - (2 * BORDER_WIDTH);
+        } else {
+            values[0] = poin->root_x;
+        }
+        if (poin->root_y < PADDING_TOP) {
+            values[1] = PADDING_TOP;
+        } else if (poin->root_y + PADDING_BOTTOM + geom->height + (2 * BORDER_WIDTH) > scre->height_in_pixels) {
+            values[1] = scre->height_in_pixels - PADDING_BOTTOM - geom->height - (2 * BORDER_WIDTH);
+        } else {
+            values[1] = poin->root_y;
+        }
         xcb_configure_window(dpy, win, XCB_CONFIG_WINDOW_X
             | XCB_CONFIG_WINDOW_Y, values);
-    } else if ((values[2] == val[1]) && (win != 0)) {
+    } else if ((values[2] == val[1]) && (win != 0)) { /* resize window */
         xcb_get_geometry_cookie_t geom_now = xcb_get_geometry(dpy, win);
         xcb_get_geometry_reply_t* geom = xcb_get_geometry_reply(dpy, geom_now, NULL);
         if (!((poin->root_x <= geom->x) || (poin->root_y <= geom->y))) {
