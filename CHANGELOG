@@ -87,6 +87,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Raise focus command keys to xwm.1 and README.
 
+### Changed
+- The "Features" section of the README to indicate audience.
+
 ### Removed
 - Pointer warp on window resize/move as this appears to be default.
 
