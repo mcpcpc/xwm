@@ -210,14 +210,12 @@ static int eventHandler(void) {
 }
 
 static void setup(void) {
-    /* subscribe to events */
     values[0] = XCB_EVENT_MASK_SUBSTRUCTURE_REDIRECT
         | XCB_EVENT_MASK_STRUCTURE_NOTIFY
         | XCB_EVENT_MASK_SUBSTRUCTURE_NOTIFY
         | XCB_EVENT_MASK_PROPERTY_CHANGE;
     xcb_change_window_attributes_checked(dpy, scre->root,
         XCB_CW_EVENT_MASK, values);
-    /* grab keys */
     xcb_ungrab_key(dpy, XCB_GRAB_ANY, scre->root, XCB_MOD_MASK_ANY);
     int key_table_size = sizeof(keys) / sizeof(*keys);
     for (int i = 0; i < key_table_size; ++i) {
