@@ -45,11 +45,7 @@ static void handleButtonPress(xcb_generic_event_t * ev) {
     win = e->child;
     values[0] = XCB_STACK_MODE_ABOVE;
     xcb_configure_window(dpy, win, XCB_CONFIG_WINDOW_STACK_MODE, values);
-    if (1 == e->detail) {
-        values[2] = 1;
-    } else if (win != 0) {
-        values[2] = 3;
-    } else {}
+    values[2] = ((1 == e->detail) ? 1 : ((win != 0) ? 3 : 0 ));
     xcb_grab_pointer(dpy, 0, scre->root, XCB_EVENT_MASK_BUTTON_RELEASE
         | XCB_EVENT_MASK_BUTTON_MOTION | XCB_EVENT_MASK_POINTER_MOTION_HINT,
         XCB_GRAB_MODE_ASYNC, XCB_GRAB_MODE_ASYNC,
