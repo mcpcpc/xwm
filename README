@@ -1,7 +1,7 @@
 xwm - a tiny XCB floating window manager
 
 xwm is a minimal viable window manager solution that was created with
-single-monitor workflow in mind. Despite its small footprint, xwm
+single-monitor workflow in mind. Despite the small footprint, xwm
 maintains a high degree of extensibility for customization and enhancing
 the user experience.
 
