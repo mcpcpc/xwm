@@ -66,34 +66,22 @@ static void handleMotionNotify(xcb_generic_event_t * ev) {
     UNUSED(ev);
     xcb_query_pointer_cookie_t coord = xcb_query_pointer(dpy, scre->root);
     xcb_query_pointer_reply_t * poin = xcb_query_pointer_reply(dpy, coord, 0);
-    if ((values[2] == (uint32_t)(1)) && (win != 0)) { /* move window */
+    if ((values[2] == (uint32_t)(1)) && (win != 0)) {
         xcb_get_geometry_cookie_t geom_now = xcb_get_geometry(dpy, win);
         xcb_get_geometry_reply_t * geom = xcb_get_geometry_reply(dpy, geom_now, NULL);
-        if (poin->root_x < PADDING_LEFT) {
-            values[0] = PADDING_LEFT;
-        } else if (poin->root_x + PADDING_RIGHT + geom->width + (2 * BORDER_WIDTH) > scre->width_in_pixels) {
-            values[0] = scre->width_in_pixels - PADDING_RIGHT - geom->width - (2 * BORDER_WIDTH);
-        } else {
-            values[0] = poin->root_x;
-        }
-        if (poin->root_y < PADDING_TOP) {
-            values[1] = PADDING_TOP;
-        } else if (poin->root_y + PADDING_BOTTOM + geom->height + (2 * BORDER_WIDTH) > scre->height_in_pixels) {
-            values[1] = scre->height_in_pixels - PADDING_BOTTOM - geom->height - (2 * BORDER_WIDTH);
-        } else {
-            values[1] = poin->root_y;
-        }
+        values[0] = ((poin->root_x + geom->width + (2 * BORDER_WIDTH)) > scre->width_in_pixels) ?
+            (scre->width_in_pixels - geom->width - (2 * BORDER_WIDTH)) : poin->root_x;
+        values[1] = ((poin->root_y + geom->height + (2 * BORDER_WIDTH)) > scre->height_in_pixels) ?
+            (scre->height_in_pixels - geom->height - (2 * BORDER_WIDTH)) : poin->root_y;
         xcb_configure_window(dpy, win, XCB_CONFIG_WINDOW_X
             | XCB_CONFIG_WINDOW_Y, values);
-    } else if ((values[2] == (uint32_t)(3)) && (win != 0)) { /* resize window */
+    } else if ((values[2] == (uint32_t)(3)) && (win != 0)) {
         xcb_get_geometry_cookie_t geom_now = xcb_get_geometry(dpy, win);
         xcb_get_geometry_reply_t* geom = xcb_get_geometry_reply(dpy, geom_now, NULL);
         if (!((poin->root_x <= geom->x) || (poin->root_y <= geom->y))) {
             values[0] = poin->root_x - geom->x - BORDER_WIDTH;
             values[1] = poin->root_y - geom->y - BORDER_WIDTH;
-            if ((values[0] >= min_x) && (values[1] >= min_y) &&
-                (poin->root_x <= (scre->width_in_pixels - PADDING_RIGHT)) &&
-                (poin->root_y <= (scre->height_in_pixels - PADDING_BOTTOM))) {
+            if ((values[0] >= min_x) && (values[1] >= min_y)) {
                 xcb_configure_window(dpy, win, XCB_CONFIG_WINDOW_WIDTH
                     | XCB_CONFIG_WINDOW_HEIGHT, values);
             }
