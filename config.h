@@ -21,6 +21,10 @@
  * window behavior.
  */
 
+#define ROOT_PADDING_TOP       0
+#define ROOT_PADDING_BOTTOM    0
+#define ROOT_PADDING_LEFT      0
+#define ROOT_PADDING_RIGHT     0
 #define WINDOW_X               600
 #define WINDOW_Y               400
 #define WINDOW_MIN_X           60
