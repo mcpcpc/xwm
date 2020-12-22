@@ -45,19 +45,15 @@ static void handleButtonPress(xcb_generic_event_t * ev) {
     win = e->child;
     values[0] = XCB_STACK_MODE_ABOVE;
     xcb_configure_window(dpy, win, XCB_CONFIG_WINDOW_STACK_MODE, values);
-    xcb_get_geometry_cookie_t geom_now = xcb_get_geometry(dpy, win);
-    xcb_get_geometry_reply_t * geom = xcb_get_geometry_reply(dpy, geom_now, NULL);
     if (1 == e->detail) {
         values[2] = 1;
-        xcb_warp_pointer(dpy, XCB_NONE, win, 0, 0, 0, 0, 1, 1);
     } else if (win != 0) {
         values[2] = 3;
-        xcb_warp_pointer(dpy, XCB_NONE, win, 0, 0, 0, 0, geom->width, geom->height);
-    }
-    else {}
+    } else {}
     xcb_grab_pointer(dpy, 0, scre->root, XCB_EVENT_MASK_BUTTON_RELEASE
         | XCB_EVENT_MASK_BUTTON_MOTION | XCB_EVENT_MASK_POINTER_MOTION_HINT,
-        XCB_GRAB_MODE_ASYNC, XCB_GRAB_MODE_ASYNC, scre->root, XCB_NONE, XCB_CURRENT_TIME);
+        XCB_GRAB_MODE_ASYNC, XCB_GRAB_MODE_ASYNC,
+        scre->root, XCB_NONE, XCB_CURRENT_TIME);
 }
 
 static void handleMotionNotify(xcb_generic_event_t * ev) {

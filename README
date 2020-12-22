@@ -19,6 +19,8 @@ COMMANDS
 ========
 
 Default keys and behavior can be customized via the config.h file:
+    Win+Button1            raise focused window to top of stack
+    Win+Button3            raise focused window to top of stack
     Win+Button1+[drag]     interactive window move
     Win+Button3+[drag]     interactive window resize
     Win+Space              run launcher menu (default: dmenu_run)
