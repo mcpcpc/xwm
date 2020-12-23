@@ -83,3 +83,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Default new window location from top-left to center.
 
+## [0.1.4] - 2020-12-22
+### Added
+- Raise focus command keys to xwm.1 and README.
+
+### Changed
+- The "Features" section of the README to indicate audience.
+
+### Removed
+- Pointer warp on window resize/move as this appears to be default.
+
+### Fixed
+- Spelling and grammar in man page.

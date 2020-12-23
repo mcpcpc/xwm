@@ -1,17 +1,13 @@
 xwm - a tiny XCB floating window manager
 
-FEATURES
-========
+A minimal viable solution that was developed with single-monitor
+workflows in mind. Despite the small footprint, xwm maintains
+extensibility and can be customized to enhance the user experience.
 
-*   Few features (just works)
-*   Extensible & configurable
-*   Focus follows mouse
-
-BUILD REQUIREMENTS
-==================
+REQUIREMENTS
+============
 
 xcb-util-keysyms, along with any default or user defined utilities:
-
     application launcher   https://git.suckless.org/dmenu
     terminal emulator      https://git.suckless.org/st
     internet browser       https://git.suckless.org/surf
@@ -20,7 +16,8 @@ COMMANDS
 ========
 
 Default keys and behavior can be customized via the config.h file:
-
+    Win+Button1            raise focused window to top of stack
+    Win+Button3            raise focused window to top of stack
     Win+Button1+[drag]     interactive window move
     Win+Button3+[drag]     interactive window resize
     Win+Space              run launcher menu (default: dmenu_run)
@@ -52,7 +49,7 @@ PATCHES
 
 For additional features, I have provided a respository for sharing
 and hosting user created patches:
-    http://github.com/mcpcpc/xwm-patches
+    http://github.com/mcpcpc/xwm-community
 
 EXAMPLES
 ========

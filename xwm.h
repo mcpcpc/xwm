@@ -59,4 +59,3 @@ static void setup(void);
 /* error handling & misc. */
 static int die(char * errstr);
 static int strcmp_c(char * str1, char * str2);
-

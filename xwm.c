@@ -12,8 +12,6 @@ static xcb_connection_t * dpy;
 static xcb_screen_t     * scre;
 static xcb_drawable_t     win;
 static uint32_t           values[3];
-static uint32_t           min_x = WINDOW_MIN_X;
-static uint32_t           min_y = WINDOW_MIN_Y;
 
 static void killclient(char **com) {
     UNUSED(com);
@@ -47,42 +45,36 @@ static void handleButtonPress(xcb_generic_event_t * ev) {
     win = e->child;
     values[0] = XCB_STACK_MODE_ABOVE;
     xcb_configure_window(dpy, win, XCB_CONFIG_WINDOW_STACK_MODE, values);
-    xcb_get_geometry_cookie_t geom_now = xcb_get_geometry(dpy, win);
-    xcb_get_geometry_reply_t * geom = xcb_get_geometry_reply(dpy, geom_now, NULL);
-    if (1 == e->detail) {
-        values[2] = 1;
-        xcb_warp_pointer(dpy, XCB_NONE, win, 0, 0, 0, 0, 1, 1);
-    } else if (win != 0) {
-        values[2] = 3;
-        xcb_warp_pointer(dpy, XCB_NONE, win, 0, 0, 0, 0, geom->width, geom->height);
-    }
-    else {}
+    values[2] = ((1 == e->detail) ? 1 : ((win != 0) ? 3 : 0 ));
     xcb_grab_pointer(dpy, 0, scre->root, XCB_EVENT_MASK_BUTTON_RELEASE
         | XCB_EVENT_MASK_BUTTON_MOTION | XCB_EVENT_MASK_POINTER_MOTION_HINT,
-        XCB_GRAB_MODE_ASYNC, XCB_GRAB_MODE_ASYNC, scre->root, XCB_NONE, XCB_CURRENT_TIME);
+        XCB_GRAB_MODE_ASYNC, XCB_GRAB_MODE_ASYNC,
+        scre->root, XCB_NONE, XCB_CURRENT_TIME);
 }
 
 static void handleMotionNotify(xcb_generic_event_t * ev) {
     UNUSED(ev);
     xcb_query_pointer_cookie_t coord = xcb_query_pointer(dpy, scre->root);
     xcb_query_pointer_reply_t * poin = xcb_query_pointer_reply(dpy, coord, 0);
-    uint32_t val[2] = {1, 3};
-    if ((values[2] == val[0]) && (win != 0)) {
+    if ((values[2] == (uint32_t)(1)) && (win != 0)) {
         xcb_get_geometry_cookie_t geom_now = xcb_get_geometry(dpy, win);
         xcb_get_geometry_reply_t * geom = xcb_get_geometry_reply(dpy, geom_now, NULL);
-        values[0] = ((poin->root_x + geom->width + (2 * BORDER_WIDTH)) > scre->width_in_pixels) ?
-            (scre->width_in_pixels - geom->width - (2 * BORDER_WIDTH)) : poin->root_x;
-        values[1] = ((poin->root_y + geom->height + (2 * BORDER_WIDTH)) > scre->height_in_pixels) ?
-            (scre->height_in_pixels - geom->height - (2 * BORDER_WIDTH)) : poin->root_y;
+        uint16_t geom_x = geom->width + (2 * BORDER_WIDTH);
+        uint16_t geom_y = geom->height + (2 * BORDER_WIDTH);
+        values[0] = ((poin->root_x + geom_x) > scre->width_in_pixels) ?
+            (scre->width_in_pixels - geom_x) : poin->root_x;
+        values[1] = ((poin->root_y + geom_y) > scre->height_in_pixels) ?
+            (scre->height_in_pixels - geom_y) : poin->root_y;
         xcb_configure_window(dpy, win, XCB_CONFIG_WINDOW_X
             | XCB_CONFIG_WINDOW_Y, values);
-    } else if ((values[2] == val[1]) && (win != 0)) {
+    } else if ((values[2] == (uint32_t)(3)) && (win != 0)) {
         xcb_get_geometry_cookie_t geom_now = xcb_get_geometry(dpy, win);
         xcb_get_geometry_reply_t* geom = xcb_get_geometry_reply(dpy, geom_now, NULL);
         if (!((poin->root_x <= geom->x) || (poin->root_y <= geom->y))) {
             values[0] = poin->root_x - geom->x - BORDER_WIDTH;
             values[1] = poin->root_y - geom->y - BORDER_WIDTH;
-            if ((values[0] >= min_x) && (values[1] >= min_y)) {
+            if ((values[0] >= (uint32_t)(WINDOW_MIN_X)) &&
+                (values[1] >= (uint32_t)(WINDOW_MIN_Y))) {
                 xcb_configure_window(dpy, win, XCB_CONFIG_WINDOW_WIDTH
                     | XCB_CONFIG_WINDOW_HEIGHT, values);
             }
@@ -218,14 +210,12 @@ static int eventHandler(void) {
 }
 
 static void setup(void) {
-    /* subscribe to events */
     values[0] = XCB_EVENT_MASK_SUBSTRUCTURE_REDIRECT
         | XCB_EVENT_MASK_STRUCTURE_NOTIFY
         | XCB_EVENT_MASK_SUBSTRUCTURE_NOTIFY
         | XCB_EVENT_MASK_PROPERTY_CHANGE;
     xcb_change_window_attributes_checked(dpy, scre->root,
         XCB_CW_EVENT_MASK, values);
-    /* grab keys */
     xcb_ungrab_key(dpy, XCB_GRAB_ANY, scre->root, XCB_MOD_MASK_ANY);
     int key_table_size = sizeof(keys) / sizeof(*keys);
     for (int i = 0; i < key_table_size; ++i) {
@@ -274,7 +264,7 @@ static int strcmp_c(char * str1, char * str2) {
 int main(int argc, char * argv[]) {
     int ret = 0;
     if ((argc == 2) && (strcmp_c("-v", argv[1]) == 0)) {
-        ret = die("xwm-0.1.3, © 2020 Michael Czigler, see LICENSE for details\n");
+        ret = die("xwm-0.1.4, © 2020 Michael Czigler, see LICENSE for details\n");
     }
     if ((ret == 0) && (argc != 1)) {
         ret = die("usage: xwm [-v]\n");
@@ -295,4 +285,3 @@ int main(int argc, char * argv[]) {
     }
     return ret;
 }
-
