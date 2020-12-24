@@ -95,3 +95,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Spelling and grammar in man page.
+
+## [0.1.5] - 2020-12-23
+### Removed
+- Unused root padding definitions.
