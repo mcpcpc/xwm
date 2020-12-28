@@ -40,7 +40,7 @@ static void spawn(char **com) {
     wait(NULL);
 }
 
-static void maximizeclient(char **com) {
+static void maxclient(char **com) {
     UNUSED(com);
     uint32_t vals[2];
     vals[0] = 800;
