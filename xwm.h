@@ -21,7 +21,7 @@ static xcb_keysym_t    xcb_get_keysym(xcb_keycode_t keycode);
 static void killclient(char **com);
 static void spawn(char **com);
 static void closewm(char ** com);
-static void maxclient(char ** com);
+static void fullclient(char ** com);
 
 /* window behavior */
 static void setFocus(xcb_drawable_t window);
