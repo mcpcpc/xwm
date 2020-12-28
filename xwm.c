@@ -49,7 +49,7 @@ static void fullclient(char **com) {
     vals[3] = 0 - BORDER_WIDTH;
     xcb_configure_window(dpy, win, XCB_CONFIG_WINDOW_WIDTH |
         XCB_CONFIG_WINDOW_HEIGHT | XCB_CONFIG_WINDOW_X |
-        XCB_CONFIG_WINDOW_Y, window, vals);
+        XCB_CONFIG_WINDOW_Y, vals);
 }
 
 static void handleButtonPress(xcb_generic_event_t * ev) {
