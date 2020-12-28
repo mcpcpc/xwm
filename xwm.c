@@ -40,6 +40,15 @@ static void spawn(char **com) {
     wait(NULL);
 }
 
+static void maximizeclient(char **com) {
+    UNUSED(com);
+    uint32_t vals[2];
+    vals[0] = 800;
+    vals[1] = 600;
+    xcb_configure_window(dpy, win, XCB_CONFIG_WINDOW_WIDTH |
+        XCB_CONFIG_WINDOW_HEIGHT, vals);
+}
+
 static void handleButtonPress(xcb_generic_event_t * ev) {
     xcb_button_press_event_t  * e = (xcb_button_press_event_t *) ev;
     win = e->child;
