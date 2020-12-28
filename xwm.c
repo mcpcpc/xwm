@@ -239,7 +239,6 @@ static void setup(void) {
         }
     }
     xcb_flush(dpy);
-    /* grab buttons */
     xcb_grab_button(dpy, 0, scre->root, XCB_EVENT_MASK_BUTTON_PRESS |
         XCB_EVENT_MASK_BUTTON_RELEASE, XCB_GRAB_MODE_ASYNC,
         XCB_GRAB_MODE_ASYNC, scre->root, XCB_NONE, 1, MOD1);
