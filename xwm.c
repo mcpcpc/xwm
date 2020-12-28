@@ -43,13 +43,13 @@ static void spawn(char **com) {
 static void fullclient(char **com) {
     UNUSED(com);
     uint32_t vals[4];
-    vals[0] = scre->width_in_pixels;
-    vals[1] = scre->height_in_pixels;
-    vals[2] = 0 - BORDER_WIDTH;
-    vals[3] = 0 - BORDER_WIDTH;
-    xcb_configure_window(dpy, win, XCB_CONFIG_WINDOW_WIDTH |
-        XCB_CONFIG_WINDOW_HEIGHT | XCB_CONFIG_WINDOW_X |
-        XCB_CONFIG_WINDOW_Y, vals);
+    vals[0] = 0 - BORDER_WIDTH;
+    vals[1] = 0 - BORDER_WIDTH;
+    vals[2] = scre->width_in_pixels;
+    vals[3] = scre->height_in_pixels;
+    xcb_configure_window(dpy, win, XCB_CONFIG_WINDOW_X |
+        XCB_CONFIG_WINDOW_Y | XCB_CONFIG_WINDOW_WIDTH |
+        XCB_CONFIG_WINDOW_HEIGHT, vals);
     xcb_flush(dpy);
 }
 
