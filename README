@@ -24,7 +24,7 @@ Default keys and behavior can be customized via the config.h file:
     Win+Enter              create new terminal window (default: st)
     Win+b                  create new browser window (default: surf)
     Win+q                  kill focused window
-    Win+f                  fullscreen focused window
+    Win+f                  full-screen focused window
     Win+Shift+q            quit window manager
 
 INSTALL
