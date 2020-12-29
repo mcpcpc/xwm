@@ -86,8 +86,8 @@ static void handleMotionNotify(xcb_generic_event_t * ev) {
         if (!((poin->root_x <= geom->x) || (poin->root_y <= geom->y))) {
             values[0] = poin->root_x - geom->x - BORDER_WIDTH;
             values[1] = poin->root_y - geom->y - BORDER_WIDTH;
-            if ((values[0] >= (uint32_t)(WINDOW_MIN_X)) &&
-                (values[1] >= (uint32_t)(WINDOW_MIN_Y))) {
+            if ((values[0] >= (uint32_t)(WINDOW_MIN_WIDTH)) &&
+                (values[1] >= (uint32_t)(WINDOW_MIN_HEIGHT))) {
                 xcb_configure_window(dpy, win, XCB_CONFIG_WINDOW_WIDTH
                     | XCB_CONFIG_WINDOW_HEIGHT, values);
             }
@@ -168,10 +168,10 @@ static void handleMapRequest(xcb_generic_event_t * ev) {
     xcb_map_request_event_t * e = (xcb_map_request_event_t *) ev;
     xcb_map_window(dpy, e->window);
     uint32_t vals[5];
-    vals[0] = (scre->width_in_pixels / 2) - (WINDOW_X / 2);
-    vals[1] = (scre->height_in_pixels / 2) - (WINDOW_Y / 2);
-    vals[2] = WINDOW_X;
-    vals[3] = WINDOW_Y;
+    vals[0] = (scre->width_in_pixels / 2) - (WINDOW_WIDTH / 2);
+    vals[1] = (scre->height_in_pixels / 2) - (WINDOW_HEIGHT / 2);
+    vals[2] = WINDOW_WIDTH;
+    vals[3] = WINDOW_HEIGHT;
     vals[4] = BORDER_WIDTH;
     xcb_configure_window(dpy, e->window, XCB_CONFIG_WINDOW_X |
         XCB_CONFIG_WINDOW_Y | XCB_CONFIG_WINDOW_WIDTH |
