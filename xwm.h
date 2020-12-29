@@ -25,10 +25,7 @@ static void fullclient(char ** com);
 
 /* window behavior */
 static void setFocus(xcb_drawable_t window);
-static void setWindowDimensions(xcb_drawable_t window);
-static void setWindowPosition(xcb_drawable_t window);
-static void setBorderWidth(xcb_drawable_t window);
-static void setBorderColor(xcb_drawable_t window, int focus);
+static void setFocusColor(xcb_drawable_t window, int focus);
 
 /* event hander actions */
 static int eventHandler(void);

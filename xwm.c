@@ -118,42 +118,11 @@ static void setFocus(xcb_drawable_t window) {
     }
 }
 
-static void setBorderColor(xcb_window_t window, int focus) {
+static void setFocusColor(xcb_window_t window, int focus) {
     if ((BORDER_WIDTH > 0) && (scre->root != window) && (0 != window)) {
         uint32_t vals[1];
         vals[0] = focus ? BORDER_COLOR_FOCUSED : BORDER_COLOR_UNFOCUSED;
         xcb_change_window_attributes(dpy, window, XCB_CW_BORDER_PIXEL, vals);
-        xcb_flush(dpy);
-    }
-}
-
-static void setBorderWidth(xcb_window_t window) {
-    if ((BORDER_WIDTH > 0) && (scre->root != window) && (0 != window)) {
-        uint32_t vals[2];
-        vals[0] = BORDER_WIDTH;
-        xcb_configure_window(dpy, window, XCB_CONFIG_WINDOW_BORDER_WIDTH, vals);
-        xcb_flush(dpy);
-    }
-}
-
-static void setWindowDimensions(xcb_window_t window) {
-    if ((scre->root != window) && (0 != window)) {
-        uint32_t vals[2];
-        vals[0] = WINDOW_X;
-        vals[1] = WINDOW_Y;
-        xcb_configure_window(dpy, window, XCB_CONFIG_WINDOW_WIDTH |
-            XCB_CONFIG_WINDOW_HEIGHT, vals);
-        xcb_flush(dpy);
-    }
-}
-
-static void setWindowPosition(xcb_window_t window) {
-    if ((scre->root != window) && (0 != window)) {
-        uint32_t vals[2];
-        vals[0] = (scre->width_in_pixels / 2) - (WINDOW_X / 2);
-        vals[1] = (scre->height_in_pixels / 2) - (WINDOW_Y / 2);
-        xcb_configure_window(dpy, window, XCB_CONFIG_WINDOW_X |
-            XCB_CONFIG_WINDOW_Y, vals);
         xcb_flush(dpy);
     }
 }
@@ -187,20 +156,27 @@ static void handleDestroyNotify(xcb_generic_event_t * ev) {
 
 static void handleFocusIn(xcb_generic_event_t * ev) {
     xcb_focus_in_event_t * e = (xcb_focus_in_event_t *) ev;
-    setBorderColor(e->event, 1);
+    setFocusColor(e->event, 1);
 }
 
 static void handleFocusOut(xcb_generic_event_t * ev) {
     xcb_focus_out_event_t * e = (xcb_focus_out_event_t *) ev;
-    setBorderColor(e->event, 0);
+    setFocusColor(e->event, 0);
 }
 
 static void handleMapRequest(xcb_generic_event_t * ev) {
     xcb_map_request_event_t * e = (xcb_map_request_event_t *) ev;
     xcb_map_window(dpy, e->window);
-    setWindowDimensions(e->window);
-    setWindowPosition(e->window);
-    setBorderWidth(e->window);
+    uint32_t vals[5];
+    vals[0] = (scre->width_in_pixels / 2) - (WINDOW_X / 2);
+    vals[1] = (scre->height_in_pixels / 2) - (WINDOW_Y / 2);
+    vals[2] = WINDOW_X;
+    vals[3] = WINDOW_Y;
+    vals[4] = BORDER_WIDTH;
+    xcb_configure_window(dpy, e->window, XCB_CONFIG_WINDOW_X |
+        XCB_CONFIG_WINDOW_Y | XCB_CONFIG_WINDOW_WIDTH |
+        XCB_CONFIG_WINDOW_HEIGHT | XCB_CONFIG_WINDOW_BORDER_WIDTH, vals);
+    xcb_flush(dpy);
     values[0] = XCB_EVENT_MASK_ENTER_WINDOW | XCB_EVENT_MASK_FOCUS_CHANGE;
     xcb_change_window_attributes_checked(dpy, e->window,
         XCB_CW_EVENT_MASK, values);
