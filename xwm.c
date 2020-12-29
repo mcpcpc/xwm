@@ -40,6 +40,19 @@ static void spawn(char **com) {
     wait(NULL);
 }
 
+static void fullclient(char **com) {
+    UNUSED(com);
+    uint32_t vals[4];
+    vals[0] = 0 - BORDER_WIDTH;
+    vals[1] = 0 - BORDER_WIDTH;
+    vals[2] = scre->width_in_pixels;
+    vals[3] = scre->height_in_pixels;
+    xcb_configure_window(dpy, win, XCB_CONFIG_WINDOW_X |
+        XCB_CONFIG_WINDOW_Y | XCB_CONFIG_WINDOW_WIDTH |
+        XCB_CONFIG_WINDOW_HEIGHT, vals);
+    xcb_flush(dpy);
+}
+
 static void handleButtonPress(xcb_generic_event_t * ev) {
     xcb_button_press_event_t  * e = (xcb_button_press_event_t *) ev;
     win = e->child;
@@ -73,8 +86,8 @@ static void handleMotionNotify(xcb_generic_event_t * ev) {
         if (!((poin->root_x <= geom->x) || (poin->root_y <= geom->y))) {
             values[0] = poin->root_x - geom->x - BORDER_WIDTH;
             values[1] = poin->root_y - geom->y - BORDER_WIDTH;
-            if ((values[0] >= (uint32_t)(WINDOW_MIN_X)) &&
-                (values[1] >= (uint32_t)(WINDOW_MIN_Y))) {
+            if ((values[0] >= (uint32_t)(WINDOW_MIN_WIDTH)) &&
+                (values[1] >= (uint32_t)(WINDOW_MIN_HEIGHT))) {
                 xcb_configure_window(dpy, win, XCB_CONFIG_WINDOW_WIDTH
                     | XCB_CONFIG_WINDOW_HEIGHT, values);
             }
@@ -105,42 +118,11 @@ static void setFocus(xcb_drawable_t window) {
     }
 }
 
-static void setBorderColor(xcb_window_t window, int focus) {
+static void setFocusColor(xcb_window_t window, int focus) {
     if ((BORDER_WIDTH > 0) && (scre->root != window) && (0 != window)) {
         uint32_t vals[1];
         vals[0] = focus ? BORDER_COLOR_FOCUSED : BORDER_COLOR_UNFOCUSED;
         xcb_change_window_attributes(dpy, window, XCB_CW_BORDER_PIXEL, vals);
-        xcb_flush(dpy);
-    }
-}
-
-static void setBorderWidth(xcb_window_t window) {
-    if ((BORDER_WIDTH > 0) && (scre->root != window) && (0 != window)) {
-        uint32_t vals[2];
-        vals[0] = BORDER_WIDTH;
-        xcb_configure_window(dpy, window, XCB_CONFIG_WINDOW_BORDER_WIDTH, vals);
-        xcb_flush(dpy);
-    }
-}
-
-static void setWindowDimensions(xcb_window_t window) {
-    if ((scre->root != window) && (0 != window)) {
-        uint32_t vals[2];
-        vals[0] = WINDOW_X;
-        vals[1] = WINDOW_Y;
-        xcb_configure_window(dpy, window, XCB_CONFIG_WINDOW_WIDTH |
-            XCB_CONFIG_WINDOW_HEIGHT, vals);
-        xcb_flush(dpy);
-    }
-}
-
-static void setWindowPosition(xcb_window_t window) {
-    if ((scre->root != window) && (0 != window)) {
-        uint32_t vals[2];
-        vals[0] = (scre->width_in_pixels / 2) - (WINDOW_X / 2);
-        vals[1] = (scre->height_in_pixels / 2) - (WINDOW_Y / 2);
-        xcb_configure_window(dpy, window, XCB_CONFIG_WINDOW_X |
-            XCB_CONFIG_WINDOW_Y, vals);
         xcb_flush(dpy);
     }
 }
@@ -174,20 +156,27 @@ static void handleDestroyNotify(xcb_generic_event_t * ev) {
 
 static void handleFocusIn(xcb_generic_event_t * ev) {
     xcb_focus_in_event_t * e = (xcb_focus_in_event_t *) ev;
-    setBorderColor(e->event, 1);
+    setFocusColor(e->event, 1);
 }
 
 static void handleFocusOut(xcb_generic_event_t * ev) {
     xcb_focus_out_event_t * e = (xcb_focus_out_event_t *) ev;
-    setBorderColor(e->event, 0);
+    setFocusColor(e->event, 0);
 }
 
 static void handleMapRequest(xcb_generic_event_t * ev) {
     xcb_map_request_event_t * e = (xcb_map_request_event_t *) ev;
     xcb_map_window(dpy, e->window);
-    setWindowDimensions(e->window);
-    setWindowPosition(e->window);
-    setBorderWidth(e->window);
+    uint32_t vals[5];
+    vals[0] = (scre->width_in_pixels / 2) - (WINDOW_WIDTH / 2);
+    vals[1] = (scre->height_in_pixels / 2) - (WINDOW_HEIGHT / 2);
+    vals[2] = WINDOW_WIDTH;
+    vals[3] = WINDOW_HEIGHT;
+    vals[4] = BORDER_WIDTH;
+    xcb_configure_window(dpy, e->window, XCB_CONFIG_WINDOW_X |
+        XCB_CONFIG_WINDOW_Y | XCB_CONFIG_WINDOW_WIDTH |
+        XCB_CONFIG_WINDOW_HEIGHT | XCB_CONFIG_WINDOW_BORDER_WIDTH, vals);
+    xcb_flush(dpy);
     values[0] = XCB_EVENT_MASK_ENTER_WINDOW | XCB_EVENT_MASK_FOCUS_CHANGE;
     xcb_change_window_attributes_checked(dpy, e->window,
         XCB_CW_EVENT_MASK, values);
@@ -226,7 +215,6 @@ static void setup(void) {
         }
     }
     xcb_flush(dpy);
-    /* grab buttons */
     xcb_grab_button(dpy, 0, scre->root, XCB_EVENT_MASK_BUTTON_PRESS |
         XCB_EVENT_MASK_BUTTON_RELEASE, XCB_GRAB_MODE_ASYNC,
         XCB_GRAB_MODE_ASYNC, scre->root, XCB_NONE, 1, MOD1);
@@ -264,7 +252,7 @@ static int strcmp_c(char * str1, char * str2) {
 int main(int argc, char * argv[]) {
     int ret = 0;
     if ((argc == 2) && (strcmp_c("-v", argv[1]) == 0)) {
-        ret = die("xwm-0.1.5, © 2020 Michael Czigler, see LICENSE for details\n");
+        ret = die("xwm-0.1.6, © 2020 Michael Czigler, see LICENSE for details\n");
     }
     if ((ret == 0) && (argc != 1)) {
         ret = die("usage: xwm [-v]\n");
