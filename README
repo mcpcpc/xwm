@@ -47,10 +47,10 @@ and hosting user created patches:
 EXAMPLES
 --------
 
-Check your xwm installed version:
+Checking the installed version of xwm:
     xwm -v
 
-Usimg startx to run xwm:
+Using startx to run xwm:
     echo "exec xwm" > ~/.xinitrc
     startx
 
