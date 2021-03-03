@@ -36,15 +36,6 @@ Building and installing from source:
     make
     sudo make install
 
-Building and installing on KISS Linux:
-    kiss b xwm
-    kiss i xwm
-
-Build and install from Arch Linux AUR:
-    git clone https://aur.archlinux.org/xwm.git
-    cd kirc
-    makepkg -si
-
 PATCHES
 =======
 
@@ -78,4 +69,4 @@ and do not share any common source code.
 CONTACT
 =======
 
-For questions or issues, please contact info[at]mcpcpc[dot]com.
+For questions or issues, please contact michaelczigler[at]mcpcpc[dot]com.
