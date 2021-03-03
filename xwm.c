@@ -193,6 +193,7 @@ static int eventHandler(void) {
                 handler->func(ev);
             }
         }
+        free(ev);
     }
     xcb_flush(dpy);
     return ret;
