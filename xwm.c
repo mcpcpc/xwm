@@ -1,4 +1,5 @@
 /* See LICENSE file for license details. */
+#include <stdlib.h>
 #include <sys/wait.h>
 #include <unistd.h>
 #include <xcb/xcb.h>
@@ -28,7 +29,7 @@ static void closewm(char **com) {
 static void spawn(char **com) {
     if (fork() == 0) {
         if (dpy != NULL) {
-            close(scre->root);
+            xcb_destroy_window(dpy, scre->root);
         }
         setsid();
         if (fork() != 0) {
@@ -187,12 +188,12 @@ static int eventHandler(void) {
     int ret = xcb_connection_has_error(dpy);
     if (ret == 0) {
         xcb_generic_event_t * ev = xcb_wait_for_event(dpy);
-    }
-    if ((ret == 0) && (ev != NULL)) {
-        handler_func_t * handler;
-        for (handler = handler_funs; handler->func != NULL; handler++) {
-            if ((ev->response_type & ~0x80) == handler->request) {
-                handler->func(ev);
+        if (ev != NULL) {
+            handler_func_t * handler;
+            for (handler = handler_funs; handler->func != NULL; handler++) {
+                if ((ev->response_type & ~0x80) == handler->request) {
+                    handler->func(ev);
+                }
             }
         }
         free(ev);
