@@ -103,3 +103,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.1.6] - 2020-12-28
 ### Added
 - Window fullscreen command alias (default: Win+f).
+
+## [0.1.7] - 2021-03-03
+###  Fixed
+- the condition in which xcb_wait_for_event() returns NULL.
+- xcb_wait_for_event() not being freed.

@@ -187,6 +187,8 @@ static int eventHandler(void) {
     int ret = xcb_connection_has_error(dpy);
     if (ret == 0) {
         xcb_generic_event_t * ev = xcb_wait_for_event(dpy);
+    }
+    if ((ret == 0) && (ev != NULL)) {
         handler_func_t * handler;
         for (handler = handler_funs; handler->func != NULL; handler++) {
             if ((ev->response_type & ~0x80) == handler->request) {
