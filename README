@@ -1,11 +1,12 @@
 xwm - a tiny XCB floating window manager
+========================================
 
 A minimal viable solution that was developed with single-monitor
 workflows in mind. Despite the small footprint, xwm maintains
 extensibility and can be customized to enhance the user experience.
 
 REQUIREMENTS
-============
+------------
 
 xcb-util-keysyms, along with any default or user defined utilities:
     application launcher   https://git.suckless.org/dmenu
@@ -13,7 +14,7 @@ xcb-util-keysyms, along with any default or user defined utilities:
     internet browser       https://git.suckless.org/surf
 
 COMMANDS
-========
+--------
 
 Default keys and behavior can be customized via the config.h file:
     Win+Button1            raise focused window to top of stack
@@ -28,7 +29,7 @@ Default keys and behavior can be customized via the config.h file:
     Win+Shift+q            quit window manager
 
 INSTALL
-=======
+-------
 
 Building and installing from source:
     git clone https://github.com/mcpcpc/xwm
@@ -36,29 +37,20 @@ Building and installing from source:
     make
     sudo make install
 
-Building and installing on KISS Linux:
-    kiss b xwm
-    kiss i xwm
-
-Build and install from Arch Linux AUR:
-    git clone https://aur.archlinux.org/xwm.git
-    cd kirc
-    makepkg -si
-
 PATCHES
-=======
+-------
 
 For additional features, I have provided a respository for sharing
 and hosting user created patches:
     http://github.com/mcpcpc/xwm-community
 
 EXAMPLES
-========
+--------
 
-Check your xwm installed version:
+Checking the installed version of xwm:
     xwm -v
 
-Usimg startx to run xwm:
+Using startx to run xwm:
     echo "exec xwm" > ~/.xinitrc
     startx
 
@@ -69,13 +61,13 @@ Patching xwm:
     patch -p0 < mypatch.patch
 
 DISCLAIMER
-==========
+----------
 
 xwm ("XCB Window Manager") is an homage to the original and 
 now-defunct "X Window Manager". Both projects are unaffiliated 
 and do not share any common source code.
 
 CONTACT
-=======
+-------
 
-For questions or issues, please contact info[at]mcpcpc[dot]com.
+For questions or issues, please contact michaelczigler[at]mcpcpc[dot]com.
