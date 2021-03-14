@@ -31,15 +31,15 @@
 
 /* ALIASED COMMANDS
  * Each space delimited argument should be passed as an additional
- * value to the character pointer array. For example, to run 
+ * value to the character pointer array. For example, to run
  * "foo -a bar", the array would be "{ "foo", "-a", "bar", NULL }".
  * Since execvp() is a variadic functions, each argument pointer must
  * be terminated by a NULL pointer.
  */
 
-static char * termcmd[] = { "st", NULL };
-static char * menucmd[] = { "dmenu_run", NULL };
-static char * browcmd[] = { "surf", "https://startpage.com", NULL };
+static char *termcmd[] = { "st", NULL };
+static char *menucmd[] = { "dmenu_run", NULL };
+static char *browcmd[] = { "surf", "https://startpage.com", NULL };
 
 /* KEY ALIASES
  * In general, one shortcut key should exist per alias. For more key
@@ -47,10 +47,10 @@ static char * browcmd[] = { "surf", "https://startpage.com", NULL };
  */
 
 static Key keys[] = {
-    { MOD1,      0x0062, spawn,      browcmd }, /* 0x0062 = XK_b */
-    { MOD1,      0xff0d, spawn,      termcmd }, /* 0xff0d = XK_Enter */
-    { MOD1,      0x0020, spawn,      menucmd }, /* 0x0020 = XK_space */
-    { MOD1,      0x0066, fullclient, NULL },    /* 0x0066 = XK_f */
-    { MOD1,      0x0071, killclient, NULL },    /* 0x0071 = XK_q */
-    { MOD1|MOD2, 0x0071, closewm,    NULL }     /* 0x0071 = XK_q */
+	{ MOD1,      0x0062, spawn,      browcmd }, /* 0x0062 = XK_b */
+	{ MOD1,      0xff0d, spawn,      termcmd }, /* 0xff0d = XK_Enter */
+	{ MOD1,      0x0020, spawn,      menucmd }, /* 0x0020 = XK_space */
+	{ MOD1,      0x0066, fullclient, NULL },    /* 0x0066 = XK_f */
+	{ MOD1,      0x0071, killclient, NULL },    /* 0x0071 = XK_q */
+	{ MOD1|MOD2, 0x0071, closewm,    NULL }     /* 0x0071 = XK_q */
 };
