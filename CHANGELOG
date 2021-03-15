@@ -1,4 +1,4 @@
-# Changelog
+# Changelog, 
 All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.1.8] - 2021-03-14
 ### Fixed
 - free(ev), which is called erroneously when ev might equal NULL.
+
+### Removed
+- xcb_destroy_window call in the spawn(), which is unnecessary and, furthermore,
+  not recommended per the developer documentation.
 
 ## [0.1.7] - 2021-03-03
 ###  Fixed
