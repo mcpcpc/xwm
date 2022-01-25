@@ -18,7 +18,6 @@ install: all
 xwm: xwm.o
 	$(CC) $(ALL_LDFLAGS) -o xwm xwm.o $(LDLIBS)
 xwm.o: xwm.c xwm.h config.h
-	$(CC) $(ALL_CFLAGS) -c xwm.c
 clean:
 	rm -f xwm *.o
 uninstall:

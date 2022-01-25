@@ -32,33 +32,26 @@ INSTALL
 -------
 
 Building and installing from source:
-    git clone https://github.com/mcpcpc/xwm
-    cd xwm
-    make
-    sudo make install
-
-PATCHES
--------
-
-For additional features, I have provided a respository for sharing
-and hosting user created patches:
-    http://github.com/mcpcpc/xwm-community
+    $ git clone https://github.com/mcpcpc/xwm
+    $ cd xwm
+    $ make
+    $ sudo make install
 
 EXAMPLES
 --------
 
 Checking the installed version of xwm:
-    xwm -v
+    $ xwm -v
 
 Using startx to run xwm:
-    echo "exec xwm" > ~/.xinitrc
-    startx
+    $ echo "exec xwm" > ~/.xinitrc
+    $ startx
 
 Using imagemagick to set a wallpaper:
-    display -window root background.png
+    $ display -window root background.png
 
 Patching xwm:
-    patch -p0 < mypatch.patch
+    $ patch -p0 < mypatch.patch
 
 DISCLAIMER
 ----------
