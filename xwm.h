@@ -15,45 +15,45 @@ typedef struct {
 
 /* convert keycode to keysym and back */
 static xcb_keycode_t *xcb_get_keycodes(xcb_keysym_t keysym);
-static xcb_keysym_t    xcb_get_keysym(xcb_keycode_t keycode);
+static xcb_keysym_t   xcb_get_keysym(xcb_keycode_t keycode);
 
 /* user defined command actions */
-static void killclient(char **com);
-static void spawn(char **com);
-static void closewm(char **com);
-static void fullclient(char **com);
+static void xwm_client_kill(char **com);
+static void xwm_client_spawn(char **com);
+static void xwm_client_maximize(char **com);
+static void xwm_disconnect(char **com);
 
 /* window behavior */
-static void setFocus(xcb_drawable_t window);
-static void setFocusColor(xcb_drawable_t window, int focus);
+static void set_focus(xcb_drawable_t window);
+static void set_focus_color(xcb_drawable_t window, int focus);
 
 /* event hander actions */
-static int eventHandler(void);
-static void handleMotionNotify(xcb_generic_event_t *ev);
-static void handleEnterNotify(xcb_generic_event_t *ev);
-static void handleDestroyNotify(xcb_generic_event_t *ev);
-static void handleButtonPress(xcb_generic_event_t *ev);
-static void handleButtonRelease(xcb_generic_event_t *ev);
-static void handleKeyPress(xcb_generic_event_t *ev);
-static void handleMapRequest(xcb_generic_event_t *ev);
-static void handleFocusIn(xcb_generic_event_t *ev);
-static void handleFocusOut(xcb_generic_event_t *ev);
+static int event_handler(void);
+static void handle_motion_notify(xcb_generic_event_t *ev);
+static void handle_enter_notify(xcb_generic_event_t *ev);
+static void handle_destroy_notify(xcb_generic_event_t *ev);
+static void handle_button_press(xcb_generic_event_t *ev);
+static void handle_Button_release(xcb_generic_event_t *ev);
+static void handle_key_press(xcb_generic_event_t *ev);
+static void handle_map_request(xcb_generic_event_t *ev);
+static void handle_focus_in(xcb_generic_event_t *ev);
+static void handle_focus_out(xcb_generic_event_t *ev);
 static handler_func_t handler_funs[] = {
-    { XCB_MOTION_NOTIFY,  handleMotionNotify },
-    { XCB_ENTER_NOTIFY,   handleEnterNotify },
-    { XCB_DESTROY_NOTIFY, handleDestroyNotify },
-    { XCB_BUTTON_PRESS,   handleButtonPress },
-    { XCB_BUTTON_RELEASE, handleButtonRelease },
-    { XCB_KEY_PRESS,      handleKeyPress },
-    { XCB_MAP_REQUEST,    handleMapRequest },
-    { XCB_FOCUS_IN,       handleFocusIn },
-    { XCB_FOCUS_OUT,      handleFocusOut },
+    { XCB_MOTION_NOTIFY,  handle_motion_notify },
+    { XCB_ENTER_NOTIFY,   handle_enter_notify },
+    { XCB_DESTROY_NOTIFY, handle_destroy_notify },
+    { XCB_BUTTON_PRESS,   handle_button_press },
+    { XCB_BUTTON_RELEASE, handle_Button_release },
+    { XCB_KEY_PRESS,      handle_key_press },
+    { XCB_MAP_REQUEST,    handle_map_request },
+    { XCB_FOCUS_IN,       handle_focus_in },
+    { XCB_FOCUS_OUT,      handle_focus_out },
     { XCB_NONE,           NULL }
 };
 
 /* intialize */
-static void setup(void);
+static void xwm_setup(void);
 
 /* error handling & misc. */
-static int die(char *errstr);
-static int strcmp_c(char *str1, char *str2);
+static int xwm_die(char *errstr);
+static int xwm_strcmp(char *str1, char *str2);
