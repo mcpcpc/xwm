@@ -16,7 +16,7 @@ install: all
 	chmod 755 $(DESTDIR)$(BINDIR)/xwm
 	chmod 644 $(DESTDIR)$(MANDIR)/man1/xwm.1
 xwm: xwm.o
-	$(CC) $(ALL_LDFLAGS) -o xwm xwm.o $(LDLIBS)
+	$(CC)  -o xwm xwm.o $(ALL_LDFLAGS) $(LDLIBS)
 xwm.o: xwm.c xwm.h config.h
 clean:
 	rm -f xwm *.o
